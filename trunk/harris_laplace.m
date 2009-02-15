@@ -71,7 +71,7 @@ for i=1:size(harris_pts,1)
   % accept if norm_LoG of pt scale is bigger then
   % the scale above and below.
   if(pt_scale < num_scales)
-    above_LoG = norm_LoG(r, c, pt_scale+1)
+    above_LoG = norm_LoG(r, c, pt_scale+1);
   else
     above_LoG = 'noneabove';
   end
