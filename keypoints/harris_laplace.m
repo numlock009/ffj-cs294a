@@ -27,7 +27,6 @@ num_scales = 10; % i don't know why, 10 just seems strong
 scaled_sigma = (scale_factor.^(0:num_scales-1)) * sigma;
 furthest_std = 3;
 
-max_type = 'window'; % 'regular' 'disk'
 harris_pts = zeros(0, 3);
 
 % scale normalized laplacian of gaussian
@@ -41,8 +40,7 @@ for i = 1:num_scales
   corners = harris_corner(img, threshold, k,  ...
                           scaled_width, ...
                           local_sigma, ...
-                          gaussderiv(furthest_std, int_sigma), ...
-                          max_type);
+                          gaussderiv(furthest_std, int_sigma));
   
   % harris_pts row, col, scale
   harris_pts(end+1:end + size(corners, 1), :) = ...
