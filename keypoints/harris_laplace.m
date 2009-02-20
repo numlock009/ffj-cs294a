@@ -30,7 +30,7 @@ furthest_std = 3;
 harris_pts = zeros(0, 3);
 
 % scale normalized laplacian of gaussian
-norm_LoG = zeros(img_height,img_width,num_scales);
+
 for i = 1:num_scales
   local_sigma = scaled_sigma(i);
   int_sigma  = s * local_sigma;
@@ -47,12 +47,9 @@ for i = 1:num_scales
       [corners(:, 2), ...
        corners(:, 1), ...
        repmat(i, [size(corners,1), 1])];
-  
-  norm_LoG(:,:,i) = local_sigma*local_sigma*...
-      imfilter(img, ...
-               fspecial('log', scaled_width, local_sigma),...
-               'replicate');
 end
+
+norm_LoG_ = norm_LoG(img, scales, furthest_std);
 
 % decompose this to another function?
 % check if at harris points
@@ -64,17 +61,17 @@ for i=1:size(harris_pts,1)
   r = harris_pts(i, 1); % y_location
   c = harris_pts(i, 2); % x_location
   pt_scale = harris_pts(i, 3);
-  pt_laplacian = norm_LoG(r, c, pt_scale);
+  pt_laplacian = norm_LoG_(r, c, pt_scale);
 
-  % accept if norm_LoG of pt scale is bigger then
+  % accept if norm_LoG_ of pt scale is bigger then
   % the scale above and below.
   if(pt_scale < num_scales)
-    above_LoG = norm_LoG(r, c, pt_scale+1);
+    above_LoG = norm_LoG_(r, c, pt_scale+1);
   else
     above_LoG = 'noneabove';
   end
   if(pt_scale > 1)
-    below_LoG = norm_LoG(r, c, pt_scale-1);
+    below_LoG = norm_LoG_(r, c, pt_scale-1);
   else
     below_LoG = 'nonebelow';
   end  

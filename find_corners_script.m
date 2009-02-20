@@ -1,4 +1,4 @@
-images = {'cow.jpg'};
+images = {'9300HarrisCorners.jpg'};
 
 n = size(images, 1);
 threshold = 0.005; % is the threshold compared to the maximum value
@@ -7,8 +7,8 @@ sigma = 1.5;
 w_width = 2 * sigma; 
 
 for i = 1:n
-  figure('Name', images{i});
-  img = imread(images{i});
+   figure('Name', images{i});
+   img = imread(images{i});
   imshow(img);
   hold on;
   axis off;
@@ -16,3 +16,14 @@ for i = 1:n
   draw_pts(img_keypts);
   draw_circles(img_keypts);
 end
+
+% for i = 1:n
+%   figure('Name', images{i});
+%   img = imread(images{i});
+%   imshow(img);
+%   hold on;
+%   axis off;
+%   img_keypts = kp_harrislaplace(img);
+%   draw_pts(img_keypts);
+%   draw_circles(img_keypts);
+% end
