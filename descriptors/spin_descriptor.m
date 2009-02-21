@@ -1,4 +1,4 @@
-function descriptor = spin( img , key_x , key_y , cellsize , intens_binsize , dist_binsize )
+function descriptor = spin_descriptor( img , key_x , key_y , cellsize , intens_binsize , dist_binsize )
 cell = img( key_x - floor(cellsize/2): key_x + floor(cellsize/2) , key_y - floor(cellsize/2): key_y + floor(cellsize/2));
 dist_bins = linspace(1 , floor(cellsize/2)+3 , dist_binsize);
 intensity_bins = linspace( 0 , 1 , intens_binsize );

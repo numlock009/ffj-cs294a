@@ -9,8 +9,9 @@ for i=1 : datasize
   m = fscanf( fid , '%d' , [ 1 2] );
   keypoints = fscanf(fid , '%d' , m);
   for j=1 : max_points
-    descriptor = RIFT_descriptor( prepare_image( strcat(directory , files(i+2).name) ) , keypoints(j,1) , keypoints(j,2) , cellsize , ori_binsize , dist_binsize );
-    allData(index , :) = reshape( descriptor , 1, size(descriptor,1) * size(descriptor,2));
+    descriptor = RIFT( prepare_image( strcat(directory , files(i+2).name) ) , keypoints(j,1) , keypoints(j,2) , cellsize , ori_binsize , dist_binsize );
+    allData(index , :) = descriptor(:)'; % same as reshaping into a 1 x
+                                         % size1*size2 vector
     index = index+1;
   end
 end

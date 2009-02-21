@@ -1,4 +1,6 @@
 % image directory for positive training examples
+pos_directory = './images/pos';
+neg_directory = './images/neg';
 % image directory for negative training examples
 train_images;
 feature = @image_features;
