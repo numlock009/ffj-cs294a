@@ -1,5 +1,5 @@
-function descriptor = RIFT_descriptor( image , key_x , key_y , cellsize , ori_binsize , dist_binsize )
-cell = image( key_x - floor(cellsize/2): key_x + floor(cellsize/2) , key_y - floor(cellsize/2): key_y + floor(cellsize/2));
+function descriptor = RIFT_descriptor( img , key_x , key_y , cellsize , ori_binsize , dist_binsize )
+cell = img( key_x - floor(cellsize/2): key_x + floor(cellsize/2) , key_y - floor(cellsize/2): key_y + floor(cellsize/2));
 ori_bins = linspace( -pi/2 , pi/2 , ori_binsize );
 dist_bins = linspace(1 , floor(cellsize/2)+3 , dist_binsize);
 descriptor = zeros( ori_binsize , dist_binsize );

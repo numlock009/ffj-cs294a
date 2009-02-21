@@ -10,20 +10,20 @@
 % http://www.ece.lsu.edu/gunturk/EE7700/Lecture_feature2.ppt
 % and 
 % http://www.mathworks.com/matlabcentral/fileexchange/17894
+% 
+% k = 0.04 
+% threshold = 0.2
+% sigma = 1.5 
+% 
+% 
+% 
 function [corners] = harris_laplace(img, threshold, k, sigma)
-% convert to grayscale and double
-if ndims(img) > 2
-  img = im2double(rgb2gray(img));
-else
-  img = im2double(img);
-end
-
 img_height = size(img,1);
 img_width = size(img,2);
 
-scale_factor = 1.4; % Lindeberg, Lowe
+scale_factor = 1.2; % Lindeberg, Lowe
 s = 0.7; % KRYSTIAN MIKOLAJCZYK AND CORDELIA SCHMID paper
-num_scales = 10; % i don't know why, 10 just seems strong
+num_scales = 13; % i don't know why, 10 just seems strong
 scaled_sigma = (scale_factor.^(0:num_scales-1)) * sigma;
 furthest_std = 3;
 
@@ -49,7 +49,7 @@ for i = 1:num_scales
        repmat(i, [size(corners,1), 1])];
 end
 
-norm_LoG_ = norm_LoG(img, scales, furthest_std);
+norm_LoG_matrix = norm_LoG(img, scaled_sigma, furthest_std);
 
 % decompose this to another function?
 % check if at harris points
@@ -61,17 +61,17 @@ for i=1:size(harris_pts,1)
   r = harris_pts(i, 1); % y_location
   c = harris_pts(i, 2); % x_location
   pt_scale = harris_pts(i, 3);
-  pt_laplacian = norm_LoG_(r, c, pt_scale);
+  pt_laplacian = norm_LoG_matrix(r, c, pt_scale);
 
-  % accept if norm_LoG_ of pt scale is bigger then
+  % accept if norm_LoG_matrix of pt scale is bigger then
   % the scale above and below.
   if(pt_scale < num_scales)
-    above_LoG = norm_LoG_(r, c, pt_scale+1);
+    above_LoG = norm_LoG_matrix(r, c, pt_scale+1);
   else
     above_LoG = 'noneabove';
   end
   if(pt_scale > 1)
-    below_LoG = norm_LoG_(r, c, pt_scale-1);
+    below_LoG = norm_LoG_matrix(r, c, pt_scale-1);
   else
     below_LoG = 'nonebelow';
   end  

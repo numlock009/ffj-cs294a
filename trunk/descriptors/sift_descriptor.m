@@ -1,1 +1,1 @@
-function descriptor = sift( img )
+function descriptor = sift_descriptor(img, keypt)

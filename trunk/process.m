@@ -16,7 +16,7 @@ function  process( pos_directory , neg_directory ,posfile , negfile, cellsize , 
 % number of intensity bins
 % dist_binsize: determine the number of circular rings that we're
 % considering aroung the key point
-[ min1  min2 ] = findAllKeypoints( pos_directory , posfile );
+[ min1  min2 ] = findAllKeypoints( pos_directory , posfile);
 [ min3  min4 ] = findAllKeypoints( neg_directory , negfile);
 maxsize = min( min1 , min3 )
 %maxsize = 98;
