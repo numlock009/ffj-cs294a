@@ -1,8 +1,8 @@
-function [norm_LoG] = norm_LoG(img, scales, furthest_std)
+function [norm_LoG] = norm_LoG(img, scaled_sigma, furthest_std)
 
 img_height = size(img,1);
 img_width = size(img,2);
-num_scales = size(scales, 1);
+num_scales = size(scaled_sigma, 2);
 
 norm_LoG = zeros(img_height,img_width, num_scales);
 
@@ -14,3 +14,4 @@ for i = 1:num_scales
                fspecial('log', scaled_width, local_sigma),...
                'replicate');
 end
+
