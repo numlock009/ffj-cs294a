@@ -10,6 +10,7 @@ for i=1 : size(cell,1)
         intens_indices = find( intensity_bins >= cell(i,j) );
         descriptor( intens_indices(1) , dist_indices(1)) = descriptor( intens_indices(1) , dist_indices(1)) + 1;
 	%here I'm using histogramming only , but in original papar as i emailed to you they use a soft function
-	% just try this one! we'll do something for the soft one after all your testing
+	% just try this one! we'll do something for the soft one after
+        % all your testing
     end
 end
