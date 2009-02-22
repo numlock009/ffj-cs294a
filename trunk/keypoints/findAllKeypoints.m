@@ -26,7 +26,7 @@ for d = 1:size(directories, 2)
   direc = directories{d};
   files = dir(direc);
   last_dir = regexp(direc, '(?<=/)\w+$', 'match');
-  points_file = [direc,'/', '..', '/', last_dir{1}, '_points', p.Results.ext];
+  points_file = [direc, '/', '..', '/', last_dir{1}, '_points', p.Results.ext];
   points_files{d} = points_file;
   fid = fopen(points_file, 'w');
   for i = 1:size(files, 1)
