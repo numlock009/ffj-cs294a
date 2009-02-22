@@ -25,7 +25,7 @@ posY = ones( size(posData,1) ,1);
 
 negfeatures = get_features(points_files{2}, varargin{:});
 negData = make_svm_feature_vector(centroid_features, negfeatures);
-negY =-1 * ones( size(negData,1) ,1);
+negY = -1 * ones( size(negData,1) ,1);
 
 % make the call to our classifier, decompose this out later.
 % make the call to svmlight using the matlab wrapper

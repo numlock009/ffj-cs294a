@@ -42,7 +42,9 @@ assert(ischar(centroid_file));
 
 k = 2000;
 min(k, max(8, floor(size(features, 1)/8)))
-features = generate_features( points_files, varargin{:});
+[features, split_features] = generate_features( points_files, varargin{:});
+
+% find the features we want to cluster around
 centroid_features = kmeans(min(k, max(8, floor(size(features, 1)/8))), ...
                            features);
 save(centroid_file, 'centroid_features');
@@ -51,12 +53,12 @@ save(centroid_file, 'centroid_features');
 % reads all the key points from file and generates descriptors for each
 % keypoint
 % 
-posfeatures = get_features(points_files{1}, varargin{:});
-posData = make_svm_feature_vector(centroid_features, posfeatures);
+posfeatures = split_features{1};  
+posData = make_feature_vector(centroid_features, posfeatures);
 posY = ones( size(posData,1) ,1);
 
-negfeatures = get_features(points_files{2}, varargin{:});
-negData = make_svm_feature_vector(centroid_features, negfeatures);
+negfeatures = split_features{2};
+negData = make_feature_vector(centroid_features, negfeatures);
 negY = -1*ones( size(negData,1) ,1);
 
 % make the call to our classifier

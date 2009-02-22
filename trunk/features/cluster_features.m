@@ -4,7 +4,7 @@
 %   in the given image
 function [clusters] = cluster_features(centroids, image_features)
 clusters = zeros(1, size(centroids, 1));
-for i = 1:size(image_features,1)
+for i = 1:size(image_features, 1)
   min = norm(centroids(1, :) - image_features(i,:));
   index = 1;
   for k = 2:size(centroids, 1)

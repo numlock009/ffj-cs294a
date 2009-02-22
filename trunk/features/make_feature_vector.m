@@ -1,3 +1,7 @@
+% features is a { {[]} } type structure
+% features{i} represents the image file
+% features{i} represents each keypoint's descriptor
+
 function [data] = make_svm_feature_vector(centroid_features, features)
 data = zeros(0 , size(centroid_features, 1));
 good = 0;

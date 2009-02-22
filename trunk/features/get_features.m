@@ -17,11 +17,18 @@ while(true)
   keypoints = fscanf(fid , '%d' , m);
   keypoints = reshape(keypoints, [m(2) m(1)])';
   index = index + 1;% represents a single image;
-  for j = 1 : min(max_points, size(keypoints, 1))
-    descriptor = get_descriptors(prepare_image( fname ), varargin{:}, ...
-                                               'pt', keypoints(j,:));
-    features{index} = descriptor(:)'; % same as reshaping into a 1xsize1*size2 vector
-                                      % point's descriptor
+  features{index} = {};
+  j = 1;
+  k = 1;
+  n = min(max_points, size(keypoints, 1));
+  while( j < size(keypoints, 1) && k < n)
+    try
+      descriptor = get_descriptors(prepare_image( fname ), varargin{:}, ...
+                                                 'pt', keypoints(j,:));
+    catch, j = j + 1, continue, end
+    features{index}{k} = descriptor(:)'; % same as reshaping into a 1xsize1*size2 vector
+    k = k + 1;                           % point's descriptor
+    j = j + 1;
   end
 end
 fclose(fid);
