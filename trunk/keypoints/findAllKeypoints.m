@@ -4,27 +4,31 @@
 % like 'harris' or 'harris_laplace' 'hl', or 'sift'
 % 
 % varargin is for parameters
-%     type = the type of keypoint detector we want to use
+%     keypt = the type of keypoint detector we want to use
 %     k
 %     threshold
 %     sigma
 %     width
-function [ min1  min2 ] = findAllKeypoints(directories, varargin)
+function [ min1  min2 points_files ] = findAllKeypoints(directories, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('directories', @iscell);
-p.addOptional('type', 'hl', @(x)any(strcmpi(x,{'h', 'harris', ...
+p.addOptional('keypt', 'hl', @(x)any(strcmpi(x,{'h', 'harris', ...
                     'harris_laplace','hl','sift'})));
+p.addOptional('ext', '', @ischar);
 p.parse(directories, varargin{:});
 
 min1 = [];
 min2 = [];
+points_files = {};
 pts = 0;
 for d = 1:size(directories, 2)
   direc = directories{d};
   files = dir(direc);
   last_dir = regexp(direc, '(?<=/)\w+$', 'match');
-  fid = fopen([direc,'/', '..', '/', last_dir{1}, '_points'], 'w');
+  points_file = [direc,'/', '..', '/', last_dir{1}, '_points', p.Results.ext];
+  points_files{d} = points_file;
+  fid = fopen(points_file, 'w');
   for i = 1:size(files, 1)
     if(~files(i).isdir)
       % because each file gives an image file name dependent on the path
