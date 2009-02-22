@@ -2,13 +2,13 @@ function [points] = get_descriptors(img, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('img', @(x)sum(size(x))>0);
-p.addOptional('type', @(x)any(strcmpi(lower(x),{'sift', 'rift', 'spin'})));
+p.addOptional('desc', @(x)any(strcmpi(lower(x),{'sift', 'rift', 'spin'})));
 p.addOptional('pt', @(x) sum(size(x))>0);
 p.parse(img, varargin{:});
-type = p.Results.type;
+desc = p.Results.desc;
 keypt = p.Results.pt;
 
-switch lower(type)
+switch lower(desc)
  case {'rift'}
   p.addParamValue('cellsize', 10, @(x)x>0);
   p.addParamValue('ori_binsize', 8, @(x)x>0);

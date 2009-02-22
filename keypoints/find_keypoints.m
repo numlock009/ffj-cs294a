@@ -2,13 +2,13 @@ function [points] = find_keypoints(img, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('img', @(x)sum(size(x))>0);
-p.addOptional('type', @(x)any(strcmpi(lower(x),{'h', 'harris', ...
+p.addOptional('keypt', @(x)any(strcmpi(lower(x),{'h', 'harris', ...
                     'harris_laplace','hl','sift'})));
 p.parse(img, varargin{:});
 
-type = p.Results.type;
+keypt = p.Results.keypt;
 
-switch lower(type)
+switch lower(keypt)
  case {'harris', 'h'}
   % use the plain harris_corner algorithm
   p.addParamValue('threshold', 0.005, @(x)x>0);
