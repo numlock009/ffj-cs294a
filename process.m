@@ -1,4 +1,4 @@
-function process(pos_directory, neg_directory, trainfile , paramfile, varargin)
+function [classifier, centroid_features] = process(pos_directory, neg_directory, trainfile , paramfile, varargin)
 % run this like
 % process('images/pos', 'images/neg', 'svm_train_file', 'svm_param_file',...
 %         'desc', 'rift', 'keypt', 'hl', 'threshold', 0.005), and so on
@@ -28,23 +28,29 @@ p.addRequired('pos_directory', @ischar);
 p.addRequired('neg_directory', @ischar);
 p.addRequired('trainfile', @ischar);
 p.addRequired('paramfile', @ischar);
+p.addParamValue('have_pts', false, @(x)(x == true || x == false));
 % why isn't this working?
 % p.addOptional('centroid_file', 'centroid_features', @ischar);
 p.parse(pos_directory, neg_directory, trainfile , paramfile, ...
         varargin{:});
 centroid_file = p.Unmatched.centroid_file;
+have_pts = p.Results.have_pts;
 assert(ischar(centroid_file));
 
-[min1 min2 points_files] = findAllKeypoints( {pos_directory, neg_directory}, ...
-                                             varargin{:}, 'ext', '_train');
-% points_files = {'images/pos_points', 'images/neg_points'}; % manually
-% set the points_files if you don't need to generate them using findAllKeypoints
+% get keypoints for each image
+if(have_pts)
+  points_files = { pos_directory, neg_directory}; % manually
+else
+  points_files = findAllKeypoints( {pos_directory, neg_directory}, ...
+                                   varargin{:}, 'ext', '_train');
+end
 
-k = 2000;
-min(k, max(8, floor(size(features, 1)/8)))
+% get all features
 [features, split_features] = generate_features( points_files, varargin{:});
 
 % find the features we want to cluster around
+k = 2000;
+min(k, max(8, floor(size(features, 1)/8)))
 centroid_features = kmeans(min(k, max(8, floor(size(features, 1)/8))), ...
                            features);
 save(centroid_file, 'centroid_features');

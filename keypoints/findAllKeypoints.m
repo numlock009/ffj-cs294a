@@ -9,7 +9,7 @@
 %     threshold
 %     sigma
 %     width
-function [ min1  min2 points_files ] = findAllKeypoints(directories, varargin)
+function [ points_files ] = findAllKeypoints(directories, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('directories', @iscell);
@@ -18,8 +18,6 @@ p.addOptional('keypt', 'hl', @(x)any(strcmpi(x,{'h', 'harris', ...
 p.addOptional('ext', '', @ischar);
 p.parse(directories, varargin{:});
 
-min1 = [];
-min2 = [];
 points_files = {};
 pts = 0;
 for d = 1:size(directories, 2)
@@ -54,8 +52,6 @@ for d = 1:size(directories, 2)
       end
       
       pts = pts+1;
-      min1(pts) = min( size(points, 1));
-      min2(pts) = min( size(points, 2));
       fprintf(fid, '%s\n', fname);
       fprintf(fid, '%d\t', size(points,1));
       fprintf(fid, '%d\n', size(points,2));
@@ -64,5 +60,3 @@ for d = 1:size(directories, 2)
   end
   fclose(fid);
 end
-min1 = min(min1(:));
-min2 = min(min2(:));
