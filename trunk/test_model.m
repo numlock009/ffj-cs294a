@@ -11,7 +11,7 @@ p.addRequired('predictfile', @ischar);
 p.parse(pos_directory , neg_directory, testfile, centroid_file, paramfile, predictfile, varargin{:});
 
 [min1 min2 points_files] = findAllKeypoints( {pos_directory, neg_directory}, ...
-                                             varargin{:});
+                                             varargin{:}, 'ext', '_test');
 % points_files = {'images/pos_points', 'images/neg_points'}; % manually
 % set the points_files if you don't need to generate them using findAllKeypoints
 
