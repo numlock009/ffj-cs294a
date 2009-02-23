@@ -27,7 +27,7 @@ dy = dx';
 %Ix = conv2(img, dx, 'same');
 %Iy = conv2(img, dy, 'same');
 Ix = do_conv(img , dx);
-Iy = do_conv( img , dy);
+Iy = do_conv(img , dy);
 
 % for the gaussian smoothing around points.
 % this is our window function
