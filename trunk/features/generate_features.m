@@ -1,30 +1,24 @@
-function [all_features, split_features] = generate_features(points_files, varargin)
+function [all_features, split_features] = generate_features(points, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
-p.addRequired('points_files', @iscell);
+p.addRequired('points', @iscell);
 p.addOptional('desc', @(x)any(strcmpi(lower(x),{'sift', 'rift', 'spin'})));
 p.addParamValue('max_points', 100, @(x) x>0);
-p.parse(points_files, varargin{:});
+p.parse(points, varargin{:});
 max_points = p.Results.max_points;
 
 all_features = [];
 split_features = {};
 index = 1;
-for fs = 1:size(points_files, 2)
-  fid = fopen( points_files{fs} , 'r');
+for fs = 1:size(points, 2)
   split_features{fs} = {};
-  image_num = 1;
-  while(true)
-    fname = fscanf(fid, '%s', 1);
-    if(isempty(fname)), break, end;
-    m = fscanf( fid , '%d' , [1 2]);
-    keypoints = fscanf(fid , '%d' , m);
-    keypoints = reshape(keypoints, [m(2) m(1)])';
-
-    j = 1;
-    n = min(max_points, size(keypoints, 1));
-    k = 1;
+  for image_num = 1:size(points{fs}, 2);  
+    fname = points{fs}{image_num}{1};
+    keypoints = points{fs}{image_num}{2};
     split_features{fs}{image_num} = [];
+    j = 1;
+    k = 1;
+    n = min(max_points, size(keypoints, 1));
     while( j <= size(keypoints, 1) && k <= n)
       try
         descriptor = get_descriptors(prepare_image( fname ), varargin{:}, ...
@@ -39,7 +33,5 @@ for fs = 1:size(points_files, 2)
       j = j + 1;                           % point's descriptor
       k = k + 1;
     end
-    image_num = image_num + 1;
   end
-  fclose(fid);
 end

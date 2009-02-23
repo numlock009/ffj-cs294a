@@ -9,24 +9,21 @@
 %     threshold
 %     sigma
 %     width
-function [ points_files ] = findAllKeypoints(directories, varargin)
+function [ keypoints ] = findAllKeypoints(directories, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('directories', @iscell);
 p.addOptional('keypt', 'hl', @(x)any(strcmpi(x,{'h', 'harris', ...
                     'harris_laplace','hl','sift'})));
-p.addOptional('ext', '', @ischar);
 p.parse(directories, varargin{:});
 
-points_files = {};
+keypoints = {}; % file -> [] of keypoints 
 pts = 0;
 for d = 1:size(directories, 2)
   direc = directories{d};
   files = dir(direc);
-  last_dir = regexp(direc, '(?<=/)\w+$', 'match');
-  points_file = [direc, '/', '..', '/', last_dir{1}, '_points', p.Results.ext];
-  points_files{d} = points_file;
-  fid = fopen(points_file, 'w');
+  j = 1;
+  keypoints{d} = {};
   for i = 1:size(files, 1)
     if(~files(i).isdir)
       % because each file gives an image file name dependent on the path
@@ -50,13 +47,11 @@ for d = 1:size(directories, 2)
                         % options or something
         end
       end
-      
+      keypoints{d}{j} = {};
+      keypoints{d}{j}{1} = fname;
+      keypoints{d}{j}{2} = points;
+      j = j + 1;
       pts = pts+1;
-      fprintf(fid, '%s\n', fname);
-      fprintf(fid, '%d\t', size(points,1));
-      fprintf(fid, '%d\n', size(points,2));
-      write_points(fid , points);
     end
   end
-  fclose(fid);
 end

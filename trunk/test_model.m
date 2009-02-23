@@ -1,32 +1,38 @@
-function test_model( pos_directory , neg_directory, testfile, centroid_file , paramfile, ...
+function test_model( pos_directory , neg_directory, testfile, centroid_features , paramfile, ...
                      predictfile, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('pos_directory', @ischar);
 p.addRequired('neg_directory', @ischar);
 p.addRequired('testfile', @ischar);
-p.addRequired('centroid_file', @ischar);
+p.addRequired('centroid_features', @(x)true);
 p.addRequired('paramfile', @ischar);
 p.addRequired('predictfile', @ischar);
-p.parse(pos_directory , neg_directory, testfile, centroid_file, paramfile, predictfile, varargin{:});
+p.addParamValue('have_pts', false, @(x)(x == true || x == false));
+p.addParamValue('exts', 'test', @ischar);
+p.parse(pos_directory , neg_directory, testfile, centroid_features, paramfile, predictfile, varargin{:});
+have_pts = p.Results.have_pts;
 
-[min1 min2 points_files] = findAllKeypoints( {pos_directory, neg_directory}, ...
-                                             varargin{:}, 'ext', '_test');
-% points_files = {'images/pos_points', 'images/neg_points'}; % manually
-% set the points_files if you don't need to generate them using findAllKeypoints
+if(have_pts)
+  points_files = {pos_directory, neg_directory}; % manually
+  points = read_points_from_file( points_files );
+else
+  points = findAllKeypoints( {pos_directory, neg_directory}, varargin{:});
+  write_points_to_file({pos_directory, neg_directory}, points, varargin{:});
+end
 
-k = 2000;
-centroid_data = load(centroid_file);
-centroid_features = centroid_data.centroid_features;
+[features, split_features] = generate_features(points, varargin{:});
 
-posfeatures = get_features(points_files{1}, varargin{:});
-posData = make_svm_feature_vector(centroid_features, posfeatures);
+% setup the feature vectors for testing
+posfeatures = split_features{1};
+posData = make_feature_vector(centroid_features, posfeatures);
 posY = ones( size(posData,1) ,1);
+size(posData)
 
-negfeatures = get_features(points_files{2}, varargin{:});
-negData = make_svm_feature_vector(centroid_features, negfeatures);
+negfeatures = split_features{2};
+negData = make_feature_vector(centroid_features, negfeatures);
 negY = -1 * ones( size(negData,1) ,1);
-
+size(negData)
 % make the call to our classifier, decompose this out later.
 % make the call to svmlight using the matlab wrapper
 option = svmlopt('ExecPath', 'classifiers/svm/');

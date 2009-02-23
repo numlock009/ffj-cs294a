@@ -1,6 +1,5 @@
 function [corners, R] = harris_corner(img, threshold, k, w_width, sigma, ...
                                       derivative)
-
 R = harris_corner_matrix(img, k, w_width, sigma, derivative);
 
 % Eliminate pixels around the border, since convolution does not produce
@@ -17,5 +16,4 @@ max_vals(maxes) = R(maxes);
 corners = (max_vals > max(R(:)) * threshold) & bordermask;
 
 [ycoord xcoord] = find(corners);
-
 corners = [xcoord ycoord];
