@@ -31,6 +31,7 @@ p.addRequired('paramfile', @ischar);
 p.addParamValue('have_pts', false, @(x)(x == true || x == false));
 p.addParamValue('clusters', 2000, @(x)(x > 1));
 p.addParamValue('ext', 'train', @ischar);
+p.addParamValue('cl_algo', 'svm', @ischar);
 p.parse(pos_directory, neg_directory, trainfile , paramfile, ...
         varargin{:});
 have_pts = p.Results.have_pts;
@@ -66,9 +67,7 @@ negfeatures = split_features{2};
 negData = make_feature_vector(centroid_features, negfeatures);
 negY = -1*ones( size(negData,1) ,1);
 
-% make the call to our classifier
-% make the call to svmlight using the matlab wrapper
-option = svmlopt('ExecPath', 'classifiers/svm/');
-svmlwrite( trainfile , [posData ; negData] , [posY ; negY]  );
-svm_learn( option, trainfile, paramfile );
-classifier = [];
+% make the call to train our classifier
+cl_algo = p.Results.cl_algo;
+classifier = train_classifier(cl_algo, [posData ; negData], [posY ; negY], ...
+                              'trainfile', trainfile, 'paramfile', paramfile);

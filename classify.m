@@ -2,11 +2,11 @@
 project_path
 
 % image directory for positive examples
-pos_train = 'images/T01_bark1'
-neg_train = 'images/T16_glass1'
+pos_train = 'images/T01_bark1_points_train_bg1'
+neg_train = 'images/T16_glass1_points_train_bg1'
 
-pos_test = 'images/bark1_test'
-neg_test = 'images/glass1_test'
+pos_test = 'images/bark1_test_points_test_bg2'
+neg_test = 'images/glass1_test_points_test_bg2'
 
 svm_tf = 'svm_train_bg_2'
 svm_pm = 'svm_param_bg_2'
@@ -15,17 +15,23 @@ max_points = 1000
 threshold = 0.2
 desc = 'rift'
 keypt = 'hl'
+have_pts = true
+cl_algo = 'nb'
 
 [classifier centroids] = train_model(pos_train, neg_train , svm_tf,...
                                      svm_pm, 'ext', 'train_bg1', ...
                                      'desc', desc, 'keypt', keypt, ...
-                                     'threshold', threshold, 'max_points', max_points);
+                                     'threshold', threshold, ...
+                                     'max_points', max_points,...
+                                     'have_pts', have_pts,...
+                                     'cl_algo', cl_algo);
 classifier
-
-test_model(pos_test, neg_test, 'svm_test_bg',...
-           centroids, svm_pm, svm_pd ,...
+have_pts = true;
+test_model(classifier, pos_test, neg_test, 'svm_test_bg',...
+           centroids, svm_pd ,...
            'desc', desc, 'keypt', keypt, 'threshold', threshold, ...
-           'max_points', max_points, 'ext', 'test_bg2')
+           'max_points', max_points, 'ext', 'test_bg2',...
+           'have_pts', have_pts)
 
 % % the above generates a keypoint file and so I'll use those and input
 % % what they should be in the things running below
