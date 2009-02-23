@@ -10,8 +10,8 @@ a directory called positive and negative . positive should contain positive
 examples and negative should negative examples.
 
 to train an SVM you should call something like:
-process('images/T01_bark1', 'images/T16_glass1', 'svm_train_bg', 'svm_param_bg', 'centroid_file', 'images/centroid_features_bg', 'desc', 'rift', 'keypt', 'hl', 'threshold', 0.005)
-         pos_directory       neg_directory        trainfile       paramfile    -  options
+train_model('images/T01_bark1', 'images/T16_glass1', 'svm_train_bg', 'svm_param_bg', 'centroid_file', 'images/centroid_features_bg', 'desc', 'rift', 'keypt', 'hl', 'threshold', 0.005)
+             pos_directory       neg_directory        trainfile       paramfile    -  options
 
 A full list of the possible options
 
@@ -22,6 +22,8 @@ A full list of the possible options
 'intens_binsize' : for spin image and RIFT descriptors
 'dist_binsize'  : for spin image descriptors
 'centroid_features' : which features became our centroids for
+'max_points'        : the maximum number of keypoints we are willing
+                      to consider.
 
 'k' : represents the k value for harris corner detector, if you want
       to change it from the default of 0.04
@@ -31,7 +33,6 @@ A full list of the possible options
           the gaussian window              
 'width' : window width for harris corner detector (not harris laplace)
 'dx'    : the gradient mask being used for harris corner (not harris laplace)
-
 
 not used in process but in other functions
 'pt' : represents a given keypoint (100, 223) for example.
