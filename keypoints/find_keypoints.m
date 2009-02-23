@@ -36,7 +36,9 @@ switch lower(keypt)
   k = p.Results.k;
   sigma = p.Results.sigma;
   
+  hlt0 = clock
   points = harris_laplace(img, threshold, k, sigma);
+  hlt1 = etime(clock,hlt0)*1000
  case 'sift'
   points = sift_keypts(img);
  otherwise

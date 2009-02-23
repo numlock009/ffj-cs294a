@@ -30,7 +30,7 @@ furthest_std = 3;
 harris_pts = zeros(0, 3);
 
 % scale normalized laplacian of gaussian
-
+% t0 = clock
 for i = 1:num_scales
   local_sigma = scaled_sigma(i);
   int_sigma  = s * local_sigma;
@@ -41,15 +41,17 @@ for i = 1:num_scales
                           scaled_width, ...
                           local_sigma, ...
                           gaussderiv(furthest_std, int_sigma));
-  
+
   % harris_pts row, col, scale
   harris_pts(end+1:end + size(corners, 1), :) = ...
-      [corners(:, 2), ...
-       corners(:, 1), ...
+      [corners, ...
        repmat(i, [size(corners,1), 1])];
 end
+% etime(clock, t0)*1000
 
+%lt0 = clock
 norm_LoG_matrix = norm_LoG(img, scaled_sigma, furthest_std);
+%lt1 = etime(clock, lt0)*1000
 
 % decompose this to another function?
 % check if at harris points
@@ -58,8 +60,8 @@ norm_LoG_matrix = norm_LoG(img, scaled_sigma, furthest_std);
 pt = 0;
 corners = zeros(size(harris_pts,1), 3);
 for i=1:size(harris_pts,1)
-  r = harris_pts(i, 1); % y_location
-  c = harris_pts(i, 2); % x_location
+  c = harris_pts(i, 1); % x_location
+  r = harris_pts(i, 2); % y_location
   pt_scale = harris_pts(i, 3);
   pt_laplacian = norm_LoG_matrix(r, c, pt_scale);
 
@@ -68,16 +70,16 @@ for i=1:size(harris_pts,1)
   if(pt_scale < num_scales)
     above_LoG = norm_LoG_matrix(r, c, pt_scale+1);
   else
-    above_LoG = 'noneabove';
+    above_LoG = 'n';
   end
   if(pt_scale > 1)
     below_LoG = norm_LoG_matrix(r, c, pt_scale-1);
   else
-    below_LoG = 'nonebelow';
+    below_LoG = 'n';
   end  
   
-  if((isequal('noneabove', above_LoG) || pt_laplacian > above_LoG) ...
-     && (isequal('nonebelow', below_LoG) || pt_laplacian > below_LoG))
+  if((isequal('n', above_LoG) || pt_laplacian > above_LoG) ...
+     && (isequal('n', below_LoG) || pt_laplacian > below_LoG))
     pt = pt + 1;
     corners(pt, 1) = c; % x location
     corners(pt, 2) = r; % y location

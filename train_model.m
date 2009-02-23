@@ -1,7 +1,7 @@
 function [classifier, centroid_features] = train_model(pos_directory, neg_directory, trainfile , paramfile, varargin)
 % run this like
 % process('images/pos', 'images/neg', 'svm_train_file', 'svm_param_file',...
-%         'desc', 'rift', 'keypt', 'hl', 'threshold', 0.005), and so on
+%         'desc', 'rift', 'keypt', 'hl', 'threshold', 0.2), and so on
 % adding some options mentioned below if necessary
 % 
 % train an SVM on training data, inputs are:
@@ -29,31 +29,30 @@ p.addRequired('neg_directory', @ischar);
 p.addRequired('trainfile', @ischar);
 p.addRequired('paramfile', @ischar);
 p.addParamValue('have_pts', false, @(x)(x == true || x == false));
-% why isn't this working?
-% p.addOptional('centroid_file', 'centroid_features', @ischar);
+p.addParamValue('clusters', 2000, @(x)(x > 1));
+p.addParamValue('ext', 'train', @ischar);
 p.parse(pos_directory, neg_directory, trainfile , paramfile, ...
         varargin{:});
-centroid_file = p.Unmatched.centroid_file;
 have_pts = p.Results.have_pts;
-assert(ischar(centroid_file));
+k = p.Results.clusters;
 
 % get keypoints for each image
 if(have_pts)
-  points_files = { pos_directory, neg_directory}; % manually
+  % if we already have points then 
+  % pos_directory is actually a points file, and similarly for neg_directory
+  points_files = { pos_directory, neg_directory};
+  points = read_points_from_file( points_files );
 else
-  points_files = findAllKeypoints( {pos_directory, neg_directory}, ...
-                                   varargin{:}, 'ext', '_train');
+  points = findAllKeypoints( {pos_directory, neg_directory}, varargin{:});
+  write_points_to_file({pos_directory, neg_directory}, points, varargin{:});
 end
 
-% get all features
-[features, split_features] = generate_features( points_files, varargin{:});
+[features, split_features] = generate_features( points, varargin{:});                                                  
 
 % find the features we want to cluster around
-k = 2000;
 min(k, max(8, floor(size(features, 1)/8)))
 centroid_features = kmeans(min(k, max(8, floor(size(features, 1)/8))), ...
                            features);
-save(centroid_file, 'centroid_features');
 
 % setup to train an svm
 % reads all the key points from file and generates descriptors for each
@@ -72,3 +71,4 @@ negY = -1*ones( size(negData,1) ,1);
 option = svmlopt('ExecPath', 'classifiers/svm/');
 svmlwrite( trainfile , [posData ; negData] , [posY ; negY]  );
 svm_learn( option, trainfile, paramfile );
+classifier = [];

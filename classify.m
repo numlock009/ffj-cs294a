@@ -1,21 +1,31 @@
+% load the path 
+project_path
+
 % image directory for positive examples
-centroid_file = 'images/centroid_features_bg_1'
+pos_train = 'images/T01_bark1'
+neg_train = 'images/T16_glass1'
+
+pos_test = 'images/bark1_test'
+neg_test = 'images/glass1_test'
+
 svm_tf = 'svm_train_bg_2'
 svm_pm = 'svm_param_bg_2'
 svm_pd = 'svm_predict_bg_2'
-cf_mat = [centroid_file, '.mat']
-max_points = 10
+max_points = 1000
 threshold = 0.2
+desc = 'rift'
+keypt = 'hl'
 
-assert(ischar(cf_mat))
+[classifier centroids] = train_model(pos_train, neg_train , svm_tf,...
+                                     svm_pm, 'ext', 'train_bg1', ...
+                                     'desc', desc, 'keypt', keypt, ...
+                                     'threshold', threshold, 'max_points', max_points);
+classifier
 
-process('images/T01_bark1', 'images/T16_glass1', svm_tf,...
-        svm_pm, 'centroid_file', centroid_file,...
-        'desc', 'rift', 'keypt', 'hl', 'threshold', threshold, 'max_points', max_points)
-test_model('images/T02_bark2/', 'images/T17_glass2/', 'svm_test_bg',...
-           cf_mat, svm_pm, svm_pd ,...
-           'desc', 'rift', 'keypt', 'hl', 'threshold', threshold, ...
-           'max_points', max_points)
+test_model(pos_test, neg_test, 'svm_test_bg',...
+           centroids, svm_pm, svm_pd ,...
+           'desc', desc, 'keypt', keypt, 'threshold', threshold, ...
+           'max_points', max_points, 'ext', 'test_bg2')
 
 % % the above generates a keypoint file and so I'll use those and input
 % % what they should be in the things running below

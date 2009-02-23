@@ -32,14 +32,15 @@ Iy = do_conv( img , dy);
 % for the gaussian smoothing around points.
 % this is our window function
 G = fspecial('gaussian', w_width, sigma);
+% Gx = fspecial('gaussian', [1 w_width], sigma);
+% Gy = Gx';
 
 % compute the harris corner matrix M at each point of the image.
-%A = conv2(Ix.^2, G, 'same');
-A = do_conv( Ix .^ 2 , G);
-%B = conv2(Iy.^2, G, 'same');
-B = do_conv( Iy .^ 2 , G);
-%C = conv2(Ix.*Iy, G, 'same');
-C = do_conv( Ix .* Iy , G);
+
+H = fft2(G, size(img,1), size(img, 2));
+A = real(ifft2(fft2(Ix.^2).*H));
+B = real(ifft2(fft2(Iy.^2).*H));
+C = real(ifft2(fft2(Ix.*Iy).*H));
 
 det_M = (A.*B)-(C.^2);
 tr_M = A + B;
