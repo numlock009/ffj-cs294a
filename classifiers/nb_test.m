@@ -13,6 +13,6 @@ for i=1:numTestDocs
 end
 
 %Print out the classification error on the test set
-classification_error = err(output, classification)
+classification_error = err(output, category)
 prec = precision(output, category, 1, 0)
 rec = recall(output, category, 1, 0)
