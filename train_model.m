@@ -1,4 +1,4 @@
-function [classifier, centroid_features] = process(pos_directory, neg_directory, trainfile , paramfile, varargin)
+function [classifier, centroid_features] = train_model(pos_directory, neg_directory, trainfile , paramfile, varargin)
 % run this like
 % process('images/pos', 'images/neg', 'svm_train_file', 'svm_param_file',...
 %         'desc', 'rift', 'keypt', 'hl', 'threshold', 0.005), and so on
