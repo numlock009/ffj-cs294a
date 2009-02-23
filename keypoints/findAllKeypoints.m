@@ -13,7 +13,7 @@ function [ keypoints ] = findAllKeypoints(directories, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('directories', @iscell);
-p.addOptional('keypt', 'hl', @(x)any(strcmpi(x,{'h', 'harris', ...
+p.addParamValue('keypt', 'hl', @(x)any(strcmpi(x,{'h', 'harris', ...
                     'harris_laplace','hl','sift'})));
 p.parse(directories, varargin{:});
 
