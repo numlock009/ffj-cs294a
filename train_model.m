@@ -31,7 +31,8 @@ p.addRequired('paramfile', @ischar);
 p.addParamValue('have_pts', false, @(x)(x == true || x == false));
 p.addParamValue('clusters', 2000, @(x)(x > 1));
 p.addParamValue('ext', 'train', @ischar);
-p.addParamValue('cl_algo', 'svm', @ischar);
+p.addParamValue('cl_algo', 'svm', @(x)any(strcmpi(lower(x),{'svm', 'nb', ...
+                    'naive_bayes'})));
 p.parse(pos_directory, neg_directory, trainfile , paramfile, ...
         varargin{:});
 have_pts = p.Results.have_pts;
