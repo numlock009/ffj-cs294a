@@ -2,7 +2,7 @@ function [points] = find_keypoints(img, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('img', @(x)sum(size(x))>0);
-p.addOptional('keypt', @(x)any(strcmpi(lower(x),{'h', 'harris', ...
+p.addParamValue('keypt', 'hl', @(x)any(strcmpi(lower(x),{'h', 'harris', ...
                     'harris_laplace','hl','sift'})));
 p.parse(img, varargin{:});
 
