@@ -9,6 +9,9 @@ containing training examples. each of these dierctories should have
 a directory called positive and negative . positive should contain positive
 examples and negative should negative examples.
 
+Check out the run_script file to see how running training and testing works when
+calling them one after another.
+
 to train an SVM you should call something like:
 train_model('images/T01_bark1', 'images/T16_glass1', 'svm_train_bg', 'svm_param_bg', 'centroid_file', 'images/centroid_features_bg', 'desc', 'rift', 'keypt', 'hl', 'threshold', 0.005)
              pos_directory       neg_directory        trainfile       paramfile    -  options
@@ -19,6 +22,7 @@ A full list of the possible options
 'keypt' : 'harris_laplace', 'harris_corner', 'sift' keypoints
 'cell size': is the size of region selected around each key point, spin and rift and sift
 'ori_binsize' : for RIFT the number of orientation bins
+'cl_algo' : classifier algorithm - decides which type of classifier to use
 'intens_binsize' : for spin image and RIFT descriptors
 'dist_binsize'  : for spin image descriptors
 'centroid_features' : which features became our centroids for
