@@ -52,9 +52,8 @@ end
 [features, split_features] = generate_features( points, varargin{:});                                                  
 
 % find the features we want to cluster around
-min(k, max(8, floor(size(features, 1)/8)))
-centroid_features = kmeans(min(k, max(8, floor(size(features, 1)/8))), ...
-                           features);
+k = min(k, max(8, floor(size(features, 1)/8)))
+centroid_features = kmeans(k, features);
 
 % setup to train an svm
 % reads all the key points from file and generates descriptors for each
