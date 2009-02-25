@@ -1,0 +1,36 @@
+experiment 1 on my dataset:
+threshold = 0.2000
+desc = rift
+keypt = hl
+Calling SVMlight:
+./classifiers/svm/svm_classify svm_files/svm_test_skin_228x171_1_hr svm_files/sv
+m_param_skin_228x171_1_hr svm_files/svm_predict_skin_228x171_1_hr
+
+Reading model...OK. (416 support vectors read)
+Classifying test examples..100..200..300..400..500..600..done
+Runtime (without IO) in cpu-seconds: 0.00
+Accuracy on test set: 75.92% (473 correct, 150 incorrect, 623 total)
+Precision/recall on test set: 46.15%/8.11%
+
+threshold = 0.2000
+desc = spin
+keypt = hl
+Calling SVMlight:
+./classifiers/svm/svm_classify svm_files/svm_test_skin_228x171_1_hr_spin svm_files/svm_param_skin_228x171_1_hr_spin svm_files/svm_predict_skin_228x171_1_hr_spin
+
+Reading model...OK. (334 support vectors read)
+Classifying test examples..100..200..300..400..500..600..done
+Runtime (without IO) in cpu-seconds: 0.00
+Accuracy on test set: 76.08% (474 correct, 149 incorrect, 623 total)
+Precision/recall on test set: 44.44%/2.70%
+
+experiment 2:
+threshold = 0.005, desc = rift, keypt = hl
+Accuracy on test set: 83.20% (535 correct, 108 incorrect, 643 total)
+Precision/recall on test set: 69.44%/50.00%
+
+threshold = 0.005, desc = spin, keypt = hl
+Accuracy on test set: 78.54% (505 correct, 138 incorrect, 643 total)
+Precision/recall on test set: 70.00%/14.00%
+
+
