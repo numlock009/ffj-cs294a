@@ -1,5 +1,5 @@
 function points = read_points_from_file(points_files)
-points = {}
+points = {};
 for d = 1:size(points_files, 2)
   points{d} = {};
   fid = fopen(points_files{d}, 'r');
