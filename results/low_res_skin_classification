@@ -1,9 +1,3 @@
-Calling SVMlight:
-./classifiers/svm/svm_classify svm_files/svm_test_bg_skin_1_lr svm_files/svm_par
-am_skin_1_lr svm_files/svm_predict_skin_1_lr
-
-Reading model...OK. (831 support vectors read)
-Classifying test examples..100..200..done
-Runtime (without IO) in cpu-seconds: 0.00
+threshold = 0.005, desc = rift, keypt = hl
 Accuracy on test set: 67.77% (185 correct, 88 incorrect, 273 total)
 Precision/recall on test set: 53.33%/17.78%

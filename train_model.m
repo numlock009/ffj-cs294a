@@ -1,4 +1,4 @@
-function [classifier, centroid_features] = train_model(pos_directory, neg_directory, trainfile , paramfile, varargin)
+function [classifier, centroid_features, trainMatrix, trainCat] = train_model(pos_directory, neg_directory, trainfile , paramfile, varargin)
 % run this like
 % process('images/pos', 'images/neg', 'svm_train_file', 'svm_param_file',...
 %         'desc', 'rift', 'keypt', 'hl', 'threshold', 0.2), and so on
@@ -49,7 +49,8 @@ else
   write_points_to_file({pos_directory, neg_directory}, points, varargin{:});
 end
 
-[features, split_features] = generate_features( points, varargin{:});                                                  
+[features, split_features] = generate_features( points, varargin{:});
+assert(floor(size(features, 1)/8) > 0)
 
 % find the features we want to cluster around
 k = min(k, max(8, floor(size(features, 1)/8)))
@@ -69,5 +70,8 @@ negY = -1*ones( size(negData,1) ,1);
 
 % make the call to train our classifier
 cl_algo = p.Results.cl_algo;
-classifier = train_classifier(cl_algo, [posData ; negData], [posY ; negY], ...
+trainMatrix = [posData ; negData];
+trainCat = [posY ; negY];
+
+classifier = train_classifier(cl_algo, trainMatrix, trainCat, ...
                               'trainfile', trainfile, 'paramfile', paramfile);
