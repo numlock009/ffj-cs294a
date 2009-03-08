@@ -1,16 +1,19 @@
-function keyptsor = sift_keypts(filename)
+function keyptsor = sift_keypts(prepared_img)
+img = prepared_img;
 %read image%%%%%%%%%%%%%%%%
-if (size(filename, 1) == 1)
-    img = imread(filename);
-else
-    img = filename;
-end
-%img = img;
-if ndims(img) > 2
-    img = im2double(rgb2gray(img));
-else
-    img = im2double(img);
-end
+% the image should be already read
+% 
+% if (size(filename, 1) == 1)
+%     img = imread(filename);
+% else
+%     img = filename;
+% end
+% %img = img;
+% if ndims(img) > 2
+%     img = im2double(rgb2gray(img));
+% else
+%     img = im2double(img);
+% end
 [height, width] = size(img);
 [M, N] = size(img);
 %equalization

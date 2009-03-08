@@ -142,7 +142,8 @@ for im = 1:size(files, 1)
         end
       end
     end
-    saveas(fig, [final_directory, '/', files(im).name, int2str(width), 'x', int2str(height), '_segments.png']);
+    saveas(fig, [final_directory, '/', files(im).name, int2str(width), ...
+                 'x', int2str(height), extra, '_segments.png']);
     close(fig);
   end
 end
