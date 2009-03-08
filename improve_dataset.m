@@ -15,7 +15,7 @@ project_path
 % % we should always call at least training before running this script
 % training
 
-load('images/skin/vars_train_skin_50x50_5_lr');
+% load('images/skin/vars_train_skin_50x50_5_lr');
 
 paramfile = ['svm_files/svm_param', extra, '_', desc]
 testfile = 'svm_files/temp'
@@ -25,8 +25,8 @@ predictfile = 'svm_files/temp1'
 % width = 50
 % height = 50
 
-img_dir = 'images/highres_texts'
-final_directory = 'images/highres_texts/skin_fp'
+img_dir = 'images/visualization'
+final_directory = 'images/visualization/fp'
 
 files = dir(img_dir);
 % centroids = load(vars_file);
@@ -142,7 +142,7 @@ for im = 1:size(files, 1)
         end
       end
     end
-    saveas(fig, [img_file, int2str(width), 'x', int2str(height), '_segments.png']);
+    saveas(fig, [final_directory, '/', files(im).name, int2str(width), 'x', int2str(height), '_segments.png']);
     close(fig);
   end
 end
