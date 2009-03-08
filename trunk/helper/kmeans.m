@@ -1,5 +1,4 @@
 function [centroids] = kmeans(k, trainingSet)
-size(trainingSet)
 dimension = size(trainingSet, 2);
 random_pixels = randperm(size(trainingSet, 1));
 centroids = trainingSet(random_pixels(1:k), :);
