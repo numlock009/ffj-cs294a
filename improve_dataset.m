@@ -68,7 +68,6 @@ for im = 1:size(files, 1)
       feature{i} = [];
     end
     
-    num_rows * num_cols
     % find which keypoints are in which segment
     for i = 1:size(points, 1) 
       row = floor(points(i, 1) / height);
@@ -137,8 +136,6 @@ for im = 1:size(files, 1)
           r = (i - 1) * height + 1;
           patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
                 facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
-        else
-          facecolor = 'r';
         end
       end
     end
