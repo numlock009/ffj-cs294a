@@ -12,8 +12,9 @@ project_path
 % % classify 
 % % we should always call at least training before running this script
 % training
-vars_file = 'images/skin/vars_train_skin_50x50_5_lr'
-load(vars_file);
+% particularly centroids should be defined
+centroids_file = 'images/skin/centroids_file_skin_50x50_5_lr_rift.mat'
+load(centroids_file);
 
 paramfile = ['svm_files/svm_param', extra, '_', desc]
 testfile = 'svm_files/temp'
@@ -29,8 +30,9 @@ image_height = size(img, 1)
 width = 50
 height = 50
 % for sliding window the step that will be taken.
-step = 4
+step = 25
 
+% find keypoints in the image.
 points = find_keypoints(img, 'keypt', 'hl', 'threshold', threshold);
 
 features = [];
@@ -45,9 +47,6 @@ while( j <= size(points,1) )
   features(j, :) = descriptor(:)';
   j = j + 1;
 end
-
-% centroids = load(vars_file);
-% centroids = centroids.centroids;
 
 feature = {};
 num_rows = ceil(image_height/height);
@@ -77,9 +76,9 @@ for i = 1:size(points, 1)
       end
     end
   end
-end 
+end
 
-
+% visualize the sliding window data.
 fig = figure('Visible', 'off');
 hold on;
 axis off;
