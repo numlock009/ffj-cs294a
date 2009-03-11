@@ -1,6 +1,5 @@
 % training
 
-
 % all of this stuff should be listed in the training script
 % experiment_number = '3' 
 % texture = 'skin_228x171'
@@ -144,5 +143,3 @@ for im = 1:size(files, 1)
     close(fig);
   end
 end
-
-

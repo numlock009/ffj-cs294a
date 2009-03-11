@@ -49,7 +49,13 @@ svm_pm = ['svm_files/svm_param', extra, '_', desc]
 classifier
 
 % if we want to save the variables to be used later we call this
-save(vars_file);
+% save(vars_file);
+save(['images', image_folder, '/centroids_file', extra, '_', desc], ...
+     'centroids', 'extra', 'desc', 'cl_algo', 'trainMatrix', 'trainCat',...
+     'have_pts_train', 'pos_train', 'neg_train', 'ext', 'image_folder',...
+     'width', 'height', 'script_type', 'texture', 'experiment_number',...
+     'threshold');
+
 
 % get the training error
 [train_ce, train_output] = classifier(trainMatrix, trainCat, [svm_tf, '_TE'], [svm_pm, '_TE']);
