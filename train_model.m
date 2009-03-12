@@ -68,6 +68,9 @@ negfeatures = split_features{2};
 negData = make_feature_vector(centroid_features, negfeatures);
 negY = -1*ones( size(negData,1) ,1);
 
+% weight the positives examples
+posY = (size(negY,1)/size(posY,1)) * posY;
+
 % make the call to train our classifier
 cl_algo = p.Results.cl_algo;
 trainMatrix = [posData ; negData];
