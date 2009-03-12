@@ -9,8 +9,10 @@ p.addRequired('centroid_features', @(x)true);
 p.addRequired('predictfile', @ischar);
 p.addParamValue('have_pts', false, @(x)(x == true || x == false));
 p.addParamValue('exts', 'test', @ischar);
+p.addParamValue('weighted', 0, @(x)((x == 1) || (x == 0)));
 p.parse(pos_directory , neg_directory, testfile, centroid_features, predictfile, varargin{:});
 have_pts = p.Results.have_pts;
+weighted = p.Results.weighted;
 
 if(have_pts)
   points_files = {pos_directory, neg_directory}; % manually
@@ -32,6 +34,10 @@ negfeatures = split_features{2};
 negData = make_feature_vector(centroid_features, negfeatures);
 negY = -1 * ones( size(negData,1) ,1);
 size(negData)
+
+if(weighted)
+  posY = (size(negY,1)/size(posY,1)) * posY;
+end
 
 % make the call to our classifier, decompose this out later.
 % make the call to svmlight using the matlab wrapper

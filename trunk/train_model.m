@@ -33,10 +33,12 @@ p.addParamValue('clusters', 2000, @(x)(x > 1));
 p.addParamValue('ext', 'train', @ischar);
 p.addParamValue('cl_algo', 'svm', @(x)any(strcmpi(lower(x),{'svm', 'nb', ...
                     'naive_bayes'})));
+p.addParamValue('weighted', 0, @(x)((x == 1) || (x == 0)));
 p.parse(pos_directory, neg_directory, trainfile , paramfile, ...
         varargin{:});
 have_pts = p.Results.have_pts;
 k = p.Results.clusters;
+weighted = p.Results.weighted;
 
 % get keypoints for each image
 if(have_pts)
@@ -69,7 +71,9 @@ negData = make_feature_vector(centroid_features, negfeatures);
 negY = -1*ones( size(negData,1) ,1);
 
 % weight the positives examples
-posY = (size(negY,1)/size(posY,1)) * posY;
+if(weighted)
+  posY = (size(negY,1)/size(posY,1)) * posY;
+end
 
 % make the call to train our classifier
 cl_algo = p.Results.cl_algo;
@@ -77,4 +81,6 @@ trainMatrix = [posData ; negData];
 trainCat = [posY ; negY];
 
 classifier = train_classifier(cl_algo, trainMatrix, trainCat, ...
-                              'trainfile', trainfile, 'paramfile', paramfile);
+                              'trainfile', trainfile,...
+                              'paramfile', paramfile,...
+                              'regression', weighted);

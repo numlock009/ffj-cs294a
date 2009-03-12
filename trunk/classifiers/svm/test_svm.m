@@ -1,5 +1,6 @@
-function [classification_error, output] = test_svm(data, categories, paramfile, testfile, predictfile)
-option = svmlopt('ExecPath', './classifiers/svm/');
+function [classification_error, output] = test_svm(data, categories, ...
+                                                  paramfile, testfile, predictfile, regression)
+option = svmlopt('ExecPath', './classifiers/svm/', 'Regression', regression);
 svmlwrite( testfile , data , categories );
 svm_classify(option, testfile , paramfile , predictfile);
 

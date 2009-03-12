@@ -6,6 +6,7 @@ p.addRequired('data', @(x) true);
 p.addRequired('categories', @(x) true);
 p.addParamValue('trainfile', 'svm_train_file', @ischar);
 p.addParamValue('paramfile', 'svm_param_file', @ischar);
+p.addParamValue('regression', 0, @(x)((x == 0) || (x == 1)));
 p.parse(cl_algo, data, categories, varargin{:});
 
 % ASSUMPTION
@@ -29,9 +30,11 @@ switch lower(cl_algo)
   % make the call to svmlight using the matlab wrapper
   trainfile = p.Results.trainfile
   paramfile = p.Results.paramfile
+  regression = p.Results.regression
   
-  train_svm( data, categories, trainfile, paramfile);
-  classifier = @(tdata, tcat, testfile, predictfile)(test_svm(tdata, tcat, paramfile, testfile, predictfile));
+  train_svm(data, categories, trainfile, paramfile, regression);
+  classifier = @(tdata, tcat, testfile, predictfile)(test_svm(tdata, tcat, ...
+                                                  paramfile, testfile, predictfile, regression));
  otherwise
   disp('Unknown classifier')
 end  
