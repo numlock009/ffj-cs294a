@@ -1,4 +1,4 @@
-goutput_file="results/skin_50x50_junk"
+output_file="results/skin_50x50_junk"
 matlab -nodesktop -nosplash >> $output_file 2>&1 << EOF
 expnum='junk'
 text='skin_50x50'
