@@ -24,8 +24,8 @@ predictfile = 'svm_files/temp1'
 % width = 50
 % height = 50
 
-img_dir = 'images/visualization'
-final_directory = 'images/visualization/fp'
+% img_dir = 'images/visualization'
+% final_directory = 'images/visualization/fp'
 
 files = dir(img_dir);
 % centroids = load(vars_file);
@@ -123,23 +123,26 @@ for im = 1:size(files, 1)
       end
     end
     
-    fig = figure('Visible', 'off');
-    hold on;
-    axis off;
-    imshow(img);
+    % fig = figure('Visible', 'off');
+    % hold on;
+    % axis off;
+    % imshow(img);
     for i = 1:num_rows
       for j = 1:num_cols
         if(img_output(i,j) > 0)
           facecolor = 'g';
           c = (j - 1) * width + 1;
           r = (i - 1) * height + 1;
-          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
-                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
+          img_color(r:(r+height), c:(c+width), 2) = 128 + img_color(r:(r+height), c:(c+width), 2)/2;
+%          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
+%                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
         end
       end
     end
-    saveas(fig, [final_directory, '/', files(im).name, int2str(width), ...
-                 'x', int2str(height), extra, '_segments.png']);
-    close(fig);
+    imwrite(img_color, [final_directory, '/', files(im).name, int2str(width), ...
+			'x', int2str(height), extra, '_segments.png']);
+%    saveas(fig, [final_directory, '/', files(im).name, int2str(width), ...
+%                 'x', int2str(height), extra, '_segments.png']);
+%    close(fig);
   end
 end

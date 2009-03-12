@@ -1,12 +1,12 @@
 function full_script(experiment_number, texture, width, height,...
  		     image_folder, script_type, have_pts_train, ...
                      have_pts_test, max_points, threshold, desc, ...
-                     keypt, cl_algo)
+                     keypt, cl_algo, img_dir, final_directory)
 % load the path
 project_path
 
 extra = ['_', texture, '_', experiment_number, '_', script_type];
-vars_file = ['results', '/vars', '_train', extra];
+vars_file = ['results', '/vars', '_train', extra, '_', desc];
 
 % empty if don't have points other wise 
 if(have_pts_train)
@@ -38,7 +38,11 @@ svm_pm = ['svm_files/svm_param', extra, '_', desc]
 classifier
 
 % if we want to save the variables to be used later we call this
-save(vars_file);
+save(vars_file,...
+     'centroids', 'extra', 'desc', 'cl_algo', 'trainMatrix', 'trainCat',...
+     'have_pts_train', 'have_pts_test', 'pos_train', 'neg_train', 'ext', 'image_folder',...
+     'width', 'height', 'script_type', 'texture', 'experiment_number',...
+     'threshold', 'max_points', 'img_dir', 'final_directory');
 
 % get the training error
 [train_ce, train_output] = classifier(trainMatrix, trainCat, [svm_tf, '_TE'], [svm_pm, '_TE']);
@@ -76,8 +80,6 @@ have_pts_test
 cl_algo
 size(centroids)
 % if we want to save the variables to be used later we call this
-save(['results', '/vars', '_all', extra]);
+save(['results', '/vars', '_all', extra, '_', desc]);
 
-width = 50
-height = 50
 improve_dataset
