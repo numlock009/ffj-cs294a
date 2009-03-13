@@ -141,7 +141,7 @@ for im = 1:size(files, 1)
           facecolor = 'g';
           c = (j - 1) * width + 1;
           r = (i - 1) * height + 1;
-          img_color(r:(r+height-1), c:(c+width-1), 2) = 128 + img_color(r:(r+height), c:(c+width), 2)/2;
+          img_color(r:(r+height-1), c:(c+width-1), 2) = 128 + img_color(r:(r+height-1), c:(c+width-1), 2)/2;
 %          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
 %                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
         end
