@@ -24,7 +24,16 @@ final_image = ['images/visualization/segments/9300HarrisCorners', extra, ...
                '_', desc]
 img_ext = '.jpg'
 
-img = prepare_image([img_file, img_ext]);
+img_color = imread([img_file, img_ext]);
+img = to_gray_double(img_color);
+
+if(size(size(img_color)) < 3)
+  img_color = zeros(size(img, 1), size(img, 2), 3);
+  img_color(:, :, 1) = img(:, :);
+  img_color(:, :, 2) = img(:, :);
+  img_color(:, :, 3) = img(:, :);
+end
+
 image_width = size(img, 2)
 image_height = size(img, 1)
 width = 50
@@ -79,10 +88,10 @@ for i = 1:size(points, 1)
 end
 
 % visualize the sliding window data.
-fig = figure('Visible', 'off');
-hold on;
-axis off;
-imshow(img);
+% fig = figure('Visible', 'off');
+% hold on;
+% axis off;
+% imshow(img);
 
 for sx = 1:num_steps_x
   for sy = 1:num_steps_y
@@ -123,13 +132,16 @@ for sx = 1:num_steps_x
           facecolor = 'g';
           c = (j - 1) * width + (sx-1)*step + 1;
           r = (i - 1) * height + (sy-1)*step + 1;
-          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
-                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
+          img_color(r:(r+height-1), c:(c+width-1), 2) = 128 + img_color(r:(r+height-1), c:(c+width-1), 2)/2;
+          % patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
+          %       facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
         end
       end
     end
   end
 end
 
-saveas(fig, [final_image, '_', int2str(width), 'x', int2str(height), '_sliding_segments.png']);
-close(fig);
+imwrite(imresize(img_color, 0.0625), [final_image, '_', int2str(width), 'x', int2str(height), '_sliding_segments.png']);
+
+% saveas(fig, [final_image, '_', int2str(width), 'x', int2str(height), '_sliding_segments.png']);
+% close(fig);
