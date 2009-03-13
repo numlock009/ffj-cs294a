@@ -36,7 +36,7 @@ negY = -1 * ones( size(negData,1) ,1);
 size(negData)
 
 if(weighted)
-  posY = (size(negY,1)/size(posY,1)) * posY;
+  posY = weighted * posY;
 end
 
 % make the call to our classifier, decompose this out later.
