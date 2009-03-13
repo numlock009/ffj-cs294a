@@ -1,5 +1,5 @@
-function [error, output] = test_model(classifier, pos_directory , neg_directory, testfile, centroid_features, ...
-                                      predictfile, varargin)
+function [error, output, testMatrix, testCat] = test_model(classifier, pos_directory , neg_directory, testfile, centroid_features, ...
+                                                  predictfile, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('pos_directory', @ischar);
@@ -41,4 +41,6 @@ end
 
 % make the call to our classifier, decompose this out later.
 % make the call to svmlight using the matlab wrapper
-[error, output] = classifier([posData ; negData], [posY ; negY], testfile, predictfile);
+testMatrix = [posData ; negData];
+testCat = [posY ; negY];
+[error, output] = classifier(testMatrix, testCat, testfile, predictfile);
