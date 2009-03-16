@@ -2,7 +2,7 @@ function [features] = get_features(points_file, varargin)
 p = inputParser;
 p.KeepUnmatched = true;
 p.addRequired('points_file', @ischar);
-p.addOptional('desc', @(x)any(strcmpi(lower(x),{'sift', 'rift', 'spin'})));
+p.addOptional('desc', @ischar);
 p.addParamValue('max_points', 100, @(x) x>0);
 p.parse(points_file, varargin{:});
 max_points = p.Results.max_points;
@@ -23,8 +23,8 @@ while(true)
   n = min(max_points, size(keypoints, 1));
   while( j < size(keypoints, 1) && k < n)
     try
-      descriptor = get_descriptors(prepare_image( fname ), varargin{:}, ...
-                                                 'pt', keypoints(j,:));
+      descriptor = get_descriptors( fname, varargin{:}, ...
+                                           'pt', keypoints(j,:));
     catch, j = j + 1, continue, end
     features{index}{k} = descriptor(:)'; % same as reshaping into a 1xsize1*size2 vector
     k = k + 1;                           % point's descriptor

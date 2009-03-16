@@ -21,8 +21,8 @@ for fs = 1:size(points, 2)
     n = min(max_points, size(keypoints, 1));
     while( j <= size(keypoints, 1) && k <= n)
       try
-        descriptor = get_descriptors(prepare_image( fname ), varargin{:}, ...
-                                                   'pt', keypoints(j,:));
+        descriptor = get_descriptors(fname, varargin{:}, ...
+                                            'pt', keypoints(j,:));
       catch
         j = j + 1;
         continue;

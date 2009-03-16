@@ -17,7 +17,7 @@ points = getKeypoints({pos_directory, neg_directory}, varargin{:});
 
 % setup the feature vectors for testing
 posfeatures = split_features{1};
-posData = make_feature_vector(centroid_features, posfeatures);
+posData = get_feature_vector(points{1}, centroid_features, posfeatures, varargin{:});
 posY = ones( size(posData,1) ,1);
 size(posData)
 if(weighted)
@@ -25,11 +25,12 @@ if(weighted)
 end
 
 negfeatures = split_features{2};
-negData = make_feature_vector(centroid_features, negfeatures);
+negData = get_feature_vector(points{2}, centroid_features, negfeatures, varargin{:});
 negY = -1 * ones( size(negData,1) ,1);
 size(negData)
 
 % make the call to our classifier
 testMatrix = [posData ; negData];
 testCat = [posY ; negY];
+
 [error, output] = classifier(testMatrix, testCat, testfile, predictfile);

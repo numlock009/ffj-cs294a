@@ -16,4 +16,4 @@ max_vals(maxes) = R(maxes);
 corners = (max_vals > max(R(:)) * threshold) & bordermask;
 
 [ycoord xcoord] = find(corners);
-corners = [xcoord ycoord];
+corners = [ycoord xcoord]; % row first then column

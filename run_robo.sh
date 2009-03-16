@@ -5,7 +5,7 @@ make
 cd ../..
 
 DISPLAY=''
-script_name="${script_name}${weighted}${threshold}${expnum}.sh"
+script_name="${script_name}${weighted}${threshold}${expnum}${desc}${feature_type}.sh"
 
 echo "matlab -nodesktop -nosplash << EOF" > $script_name
 echo "expnum='$expnum'" >> $script_name
@@ -20,12 +20,13 @@ echo "keypt='$keypt'" >> $script_name
 echo "max_pts=$max_pts" >> $script_name
 echo "threshold=$threshold" >> $script_name
 echo "desc='$desc'" >> $script_name
+echo "feature_type='$feature_type'" >> $script_name
 echo "cl_algo='$cl_algo'" >> $script_name
 echo "vis_dir = '$vis_dir'" >> $script_name
 echo "final_directory = [vis_dir, '/fp']" >> $script_name
 echo "full_script(expnum, text, width, height, img_fol, neg_fol, st, ..." >> $script_name
 echo "            max_pts, threshold, ..." >> $script_name
-echo "            desc, keypt, cl_algo, vis_dir, final_directory, weighted)" >> $script_name
+echo "            desc, feature_type, keypt, cl_algo, vis_dir, final_directory, weighted)" >> $script_name
 echo "EOF" >> $script_name  
 chmod +x $script_name
 . $script_name

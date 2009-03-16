@@ -24,6 +24,7 @@ project_path
 paramfile = ['svm_files/svm_param', svm_ext]
 testfile = 'svm_files/temp'
 predictfile = 'svm_files/temp1'
+feature_types = sort(regexp(feature_type, '_', 'split'));
 
 files = dir(img_dir);
 
@@ -53,6 +54,8 @@ for im = 1:size(files, 1)
       points = find_keypoints(img, 'keypt', keypt, ...
                               'threshold', threshold);
       fid = fopen(pt_file, 'w');
+      fprintf(fid, '%d\t', size(points,1));
+      fprintf(fid, '%d\n', size(points,2));
       write_points(fid, points);
       fclose(fid);
     end
@@ -63,8 +66,8 @@ for im = 1:size(files, 1)
     j = 1;
     while( j <= size(points,1) )
       try
-        descriptor = get_descriptors(img, 'desc', desc, 'pt', points(j, :));
-      catch
+        descriptor = get_descriptors(img_color, 'desc', desc, 'pt', points(j, :));
+      catch ME
         points(j, :) = [];
         continue
       end
@@ -72,8 +75,32 @@ for im = 1:size(files, 1)
       j = j + 1;
     end
 
+    % whole patch features
+    data = [];
+    for y = 1:height:image_height
+      for x = 1:width:image_width
+        data_pt = [];
+        for k = 1:size(feature_types, 2)
+          data_val = [];
+          try
+            data_val = whole_features(feature_types{k}, ...
+                                      img_color(y:y+height-1, x:x+width-1, :));
+          catch
+            % only whole feature we know about are 3 channel color
+            % features
+            data_val = zeros(1, whole_features_size(feature_types{k}, ...
+                                                    width, height));
+          end
+          data_pt = [data_pt, data_val(:)'];
+        end
+        data = [data; data_pt];
+      end
+    end
+    size(data)
+
     size(points)
     size(features)
+    size(centroids)
     feature = {};
     num_rows = ceil(image_height/height);
     num_cols = ceil(image_width/width);
@@ -83,14 +110,14 @@ for im = 1:size(files, 1)
     
     % find which keypoints are in which segment
     for i = 1:size(points, 1) 
-      row = floor(points(i, 1) / height);
+      row = floor(points(i, 1) / height); % points are in row, col order
       col = floor(points(i, 2) / width );
       index = row * num_cols + col + 1;
       feature{index}(end+1:end+1, :) = features(i, :);
-    end 
-    
+    end
+
     % make feature vectors and filter out vectors that are empty
-    data = make_feature_vector_(centroids, feature);
+    data = [make_feature_vector_(centroids, feature), data];
     size(data)
     data_good = [];
     good = 0;
@@ -118,7 +145,7 @@ for im = 1:size(files, 1)
                         % if there were no results
       end
     end
-    
+
     img_output = reshape(output, num_cols, num_rows)';
     
     for i = 1:num_rows
@@ -127,6 +154,8 @@ for im = 1:size(files, 1)
           facecolor = 'g';
           c = (j - 1) * width + 1;
           r = (i - 1) * height + 1;
+          if((c + width - 1 > image_width) || (r + height -1 > image_height)), continue, end
+            
           img_crop = imcrop(img_color, [c, r, width-1, height-1]);
           imwrite(img_crop, strcat(final_directory, '/', 'fp_', ...
                                    int2str(c), 'x', int2str(r), svm_ext, '_', ...
@@ -141,6 +170,8 @@ for im = 1:size(files, 1)
     % hold on;
     % axis off;
     % imshow(img);
+    num_rows
+    num_cols
     for i = 1:num_rows
       for j = 1:num_cols
         if(img_output(i,j) > 0)
@@ -154,7 +185,7 @@ for im = 1:size(files, 1)
 	  x = c + width - 1;
           if(x > image_width)
 	    x = image_width;
-          end            
+          end
           img_color(r:y, c:x, 2) = 128 + img_color(r:y, c:x, 2)/2;
 %          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
 %                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
