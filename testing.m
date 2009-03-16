@@ -1,33 +1,53 @@
-% image directory for positive training examples
-pos_directory = './images/pos';
-neg_directory = './images/neg';
-% image directory for negative training examples
-train_images;
-feature = @image_features;
-classifier = image_classifier(train_images, feature);
-% image directory for positive testing examples
-% image directory for negative testing examples
-test_images;
+% load path
+project_path
+% load variables
+load 'results/vars_train_skin_50x50_3_lr_rift.mat'
+have_pts_test = 1;
+classifier = train_classifier(cl_algo, trainMatrix, trainCat, ...
+                              'trainfile', svm_tf,...
+                              'paramfile', svm_pm,...
+                              'regression', weighted);
 
-% figure out how to load these
-test_examples = [];
-test_actual = zeros(size(test_images,1), 1);
-for i = 1:size(test_images,1)
-  test_examples(i, :) = feature(test_images(i));
-  % choose the following based on whether the image
-  % came from the positive or negative directory 
-  test_actual(i) = 1;
+% get the training error
+[train_ce, train_output] = classifier(trainMatrix, trainCat, [svm_tf, '_TE'], [svm_pm, '_TE']);
+
+precision(sign(train_output), sign(trainCat), 1, -1);
+recall(sign(train_output), sign(trainCat), 1, -1);
+
+if(have_pts_test)
+  have_pts_str_test = ['_points', '_test', extra]
+else
+  have_pts_str_test = ''; 
 end
 
-for i = 1:size(test_examples, 1)
-  classification(i) = classifier(test_examples(i));
-end
+pos_test = ['images', image_folder, '/pos_test', have_pts_str_test]
+neg_test = ['images', image_folder, '/neg_test', have_pts_str_test]
+test_ext = ['test', extra]
 
-% depends on the algorithm
-pos = 1;
-neg = 0;
+svm_pd = ['svm_files/svm_predict', extra, '_', desc]
+svm_testf = ['svm_files/svm_test', extra, '_', desc]
 
-num_correct = sum(classification == test_actual);
-error = num_correct / size(test_examples, 1)
-prec = precision(classification, test_actual, pos, neg)
-rec = recall(classification, test_actual, pos, neg)
+[e, output, testMatrix, testCat] = test_model(classifier, pos_test, neg_test, svm_testf,...
+                                              centroids, svm_pd ,...
+                                              'desc', desc, 'keypt', keypt,...
+                                              'threshold', threshold, ...
+                                              'max_points', max_points,...
+                                              'ext', test_ext,...
+                                              'have_pts', have_pts_test,...
+                                              'weighted', ...
+                                               weighted*(sum(trainCat~=-1)/sum(trainCat==-1)));
+
+e
+precision(sign(output), sign(testCat), 1, -1);
+recall(sign(output), sign(testCat), 1, -1);
+extra
+max_points
+threshold
+desc
+keypt
+have_pts_train
+have_pts_test
+cl_algo
+size(centroids)
+
+improve_dataset
