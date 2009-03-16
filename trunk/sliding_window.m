@@ -47,7 +47,21 @@ height = 50
 step = 5
 
 % find keypoints in the image.
-points = find_keypoints(img, 'keypt', 'hl', 'threshold', threshold);
+pt_file = [img_file, img_ext, '_', keypt, '_', num2str(threshold)]
+if(exist(pt_file) == 2)
+  fid = fopen(pt_file, 'r');
+  points = read_points(fid);
+  fclose(fid);
+else
+  points = find_keypoints(img, 'keypt', keypt, ...
+                          'threshold', threshold);
+  fid = fopen(pt_file, 'w');
+  fprintf(fid, '%d\t', size(points,1));
+  fprintf(fid, '%d\n', size(points,2));
+  write_points(fid, points);
+  fclose(fid);
+end
+size(points)
 
 features = [];
 j = 1;
@@ -62,11 +76,40 @@ while( j <= size(points,1) )
   j = j + 1;
 end
 
+num_steps_x = floor(width/step);
+num_steps_y = floor(height/step);
+
+% whole patch features
+data = {};
+for sx = 1:num_steps_x
+  for sy = 1:num_steps_y
+    data{sx, sy} = [];
+    for y = (1+(sy-1)*step):height:image_height
+      for x = (1+(sx-1)*step):width:image_width
+        data_pt = [];
+        for k = 1:size(feature_types, 2)
+          data_val = [];
+          try
+            data_val = whole_features(feature_types{k}, ...
+                                      img_color(y:y+height-1, x:x+width-1, :));
+          catch
+            % only whole feature we know about are 3 channel color
+            % features
+            data_val = zeros(1, whole_features_size(feature_types{k}, ...
+                                                    width, height));
+          end
+          data_pt = [data_pt, data_val(:)'];
+        end
+        data{sx, sy} = [data{sx, sy}; data_pt];
+      end
+    end
+  end
+end
+
+
 feature = {};
 num_rows = ceil(image_height/height);
 num_cols = ceil(image_width/width);
-num_steps_x = floor(width/step);
-num_steps_y = floor(height/step);
 for sx = 1:num_steps_x
   for sy = 1:num_steps_y
     feature{sx, sy} = {};
@@ -101,14 +144,15 @@ imshow(img_color);
 for sx = 1:num_steps_x
   for sy = 1:num_steps_y
     % create the feature vectors
-    data = make_feature_vector_(centroids, feature{sx, sy});
+    data{sx, sy} = [make_feature_vector_(centroids, feature{sx, sy}), ...
+                    data{sx, sy}];
     size(data)
     data_good = [];
     good = 0;
-    for i=1:size(data, 1)
-      if(norm(data(i, :)) ~= 0)
+    for i=1:size(data{sx, sy}, 1)
+      if(norm(data{sx, sy}(i, :)) ~= 0)
         good = good + 1;
-        data_good(good, :) = data(i, :);
+        data_good(good, :) = data{sx, sy}(i, :);
       end
     end
 
@@ -119,10 +163,10 @@ for sx = 1:num_steps_x
 
     % remap the output from the patches that where classifiable 
     % to all of the patches
-    output = zeros(size(data, 1), 1);
+    output = zeros(size(data{sx, sy}, 1), 1);
     good = 0;
-    for i=1:size(data, 1)
-      if(norm(data(i, :)) ~= 0)
+    for i=1:size(data{sx, sy}, 1)
+      if(norm(data{sx, sy}(i, :)) ~= 0)
         good = good + 1;
         output(i) = output_good(good);
       else
@@ -138,7 +182,16 @@ for sx = 1:num_steps_x
           facecolor = 'g';
           c = (j - 1) * width + (sx-1)*step + 1;
           r = (i - 1) * height + (sy-1)*step + 1;
-          % img_color(r:(r+height-1), c:(c+width-1), 2) = 128 + img_color(r:(r+height-1), c:(c+width-1), 2)/2;
+
+          % y = r + height - 1;
+          % if( y > image_height)
+	  %   y = image_height;
+          % end
+	  % x = c + width - 1;
+          % if(x > image_width)
+	  %   x = image_width;
+          % end
+          % img_color(r:y, c:x, 2) = 128 + img_color(r:y, c:x, 2)/2;
           patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
                 facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
         end

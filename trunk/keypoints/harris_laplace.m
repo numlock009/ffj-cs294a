@@ -60,8 +60,8 @@ norm_LoG_matrix = norm_LoG(img, scaled_sigma, furthest_std);
 pt = 0;
 corners = zeros(size(harris_pts,1), 3);
 for i=1:size(harris_pts,1)
-  c = harris_pts(i, 1); % x_location
-  r = harris_pts(i, 2); % y_location
+  r = harris_pts(i, 1); % x_location, row first
+  c = harris_pts(i, 2); % y_location, column second
   pt_scale = harris_pts(i, 3);
   pt_laplacian = norm_LoG_matrix(r, c, pt_scale);
 
@@ -81,8 +81,8 @@ for i=1:size(harris_pts,1)
   if((isequal('n', above_LoG) || pt_laplacian > above_LoG) ...
      && (isequal('n', below_LoG) || pt_laplacian > below_LoG))
     pt = pt + 1;
-    corners(pt, 1) = c; % x location
-    corners(pt, 2) = r; % y location
+    corners(pt, 1) = r; % y location row
+    corners(pt, 2) = c; % x location col
     corners(pt, 3) = furthest_std * pt_scale; % for displaying the circle
                                               % around the point
   end

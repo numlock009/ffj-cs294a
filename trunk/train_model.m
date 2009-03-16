@@ -41,7 +41,7 @@ weighted = p.Results.weighted;
 % get keypoints for each image
 points = getKeypoints({pos_directory, neg_directory}, varargin{:});
 
-[features, split_features] = generate_features( points, varargin{:});
+[features, split_features] = generate_features(points, varargin{:});
 assert(floor(size(features, 1)/8) > 0)
 
 % find the features we want to cluster around
@@ -49,15 +49,13 @@ k = min(k, max(8, floor(size(features, 1)/8)))
 centroid_features = kmeans(k, features);
 
 % setup to train an svm
-% reads all the key points from file and generates descriptors for each
-% keypoint
-% 
+% bag of words on the centroids, and then global image features
 posfeatures = split_features{1};  
-posData = make_feature_vector(centroid_features, posfeatures);
+posData = get_feature_vector(points{1}, centroid_features, posfeatures, varargin{:});
 posY = ones( size(posData,1) ,1);
 
 negfeatures = split_features{2};
-negData = make_feature_vector(centroid_features, negfeatures);
+negData = get_feature_vector(points{2}, centroid_features, negfeatures, varargin{:});
 negY = -1*ones( size(negData,1) ,1);
 
 % weight the positives examples
