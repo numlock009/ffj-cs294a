@@ -9,32 +9,28 @@
 % threshold = 0.005
 % extra = ['_', texture, '_', experiment_number, '_', script_type];
 % vars_file = ['images', image_folder, '/vars', extra]
+% make sure these are set in whatever is called before this script
+% width = 50
+% height = 50
+% img_dir = 'images/visualization'
+% final_directory = 'images/visualization/fp'
 project_path
 % % classify 
 % % we should always call at least training before running this script
 % training
-
+%% or we load the necessary vars from a variables file
 % load('images/skin/vars_train_skin_50x50_5_lr');
 
-paramfile = ['svm_files/svm_param', extra, '_', desc]
+paramfile = ['svm_files/svm_param', svm_ext]
 testfile = 'svm_files/temp'
 predictfile = 'svm_files/temp1'
 
-% make sure these are set in whatever is called before this script
-% width = 50
-% height = 50
-
-% img_dir = 'images/visualization'
-% final_directory = 'images/visualization/fp'
-
 files = dir(img_dir);
-% centroids = load(vars_file);
-% centroids = centroids.centroids;
 
 for im = 1:size(files, 1) 
   if(~files(im).isdir)
     img_file = [img_dir, '/', files(im).name]
-    img_color = imread(img_file);
+    try, img_color = imread(img_file);, catch, continue, end
     img = to_gray_double(img_color);
 
     if(size(size(img_color)) < 3)
@@ -48,8 +44,18 @@ for im = 1:size(files, 1)
     image_height = size(img, 1)
     
     % get all the image keypoints
-    points = find_keypoints(img, 'keypt', 'hl', 'threshold', threshold);
-
+    pt_file = [img_file, '_', keypt, '_', num2str(threshold)]
+    if(exist(pt_file) == 2)
+      fid = fopen(pt_file, 'r');
+      points = read_points(fid);
+      fclose(fid);
+    else
+      points = find_keypoints(img, 'keypt', keypt, ...
+                              'threshold', threshold);
+      fid = fopen(pt_file, 'w');
+      write_points(fid, points);
+      fclose(fid);
+    end
     size(points)
     
     % get the descriptors for each keypoint
@@ -97,7 +103,7 @@ for im = 1:size(files, 1)
     
     % classify the results
     [meaningless_error, output_good] = test_svm(data_good, ones(size(data_good, 1), 1), ...
-                                                paramfile, testfile, predictfile);
+                                                paramfile, testfile, predictfile, weighted);
     
     % remap the output from the patches that where classifiable 
     % to all of the patches
@@ -123,7 +129,7 @@ for im = 1:size(files, 1)
           r = (i - 1) * height + 1;
           img_crop = imcrop(img_color, [c, r, width-1, height-1]);
           imwrite(img_crop, strcat(final_directory, '/', 'fp_', ...
-                                   int2str(c), 'x', int2str(r), extra, '_', ...
+                                   int2str(c), 'x', int2str(r), svm_ext, '_', ...
                                    files(im).name), ...
                   'Quality', 100);
           
@@ -141,16 +147,24 @@ for im = 1:size(files, 1)
           facecolor = 'g';
           c = (j - 1) * width + 1;
           r = (i - 1) * height + 1;
-          img_color(r:(r+height-1), c:(c+width-1), 2) = 128 + img_color(r:(r+height-1), c:(c+width-1), 2)/2;
+	  y = r + height - 1;
+          if( y > image_height)
+	    y = image_height;
+          end
+	  x = c + width - 1;
+          if(x > image_width)
+	    x = image_width;
+          end            
+          img_color(r:y, c:x, 2) = 128 + img_color(r:y, c:x, 2)/2;
 %          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
 %                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
         end
       end
     end
-    imwrite(imresize(img_color, 0.0625), [final_directory, '/', files(im).name, int2str(width), ...
-			'x', int2str(height), extra, '_segments.png']);
+    imwrite(imresize(img_color, [600, 800]), [img_dir, '/segments/', files(im).name, int2str(width), ...
+                    'x', int2str(height), svm_ext, '_segments.png']);
 %    saveas(fig, [final_directory, '/', files(im).name, int2str(width), ...
-%                 'x', int2str(height), extra, '_segments.png']);
+%                 'x', int2str(height), svm_ext, '_segments.png']);
 %    close(fig);
   end
 end

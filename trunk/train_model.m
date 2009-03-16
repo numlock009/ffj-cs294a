@@ -28,7 +28,6 @@ p.addRequired('pos_directory', @ischar);
 p.addRequired('neg_directory', @ischar);
 p.addRequired('trainfile', @ischar);
 p.addRequired('paramfile', @ischar);
-p.addParamValue('have_pts', false, @(x)(x == true || x == false));
 p.addParamValue('clusters', 2000, @(x)(x > 1));
 p.addParamValue('ext', 'train', @ischar);
 p.addParamValue('cl_algo', 'svm', @(x)any(strcmpi(lower(x),{'svm', 'nb', ...
@@ -36,20 +35,11 @@ p.addParamValue('cl_algo', 'svm', @(x)any(strcmpi(lower(x),{'svm', 'nb', ...
 p.addParamValue('weighted', 0, @(x)((x == 1) || (x == 0)));
 p.parse(pos_directory, neg_directory, trainfile , paramfile, ...
         varargin{:});
-have_pts = p.Results.have_pts;
 k = p.Results.clusters;
 weighted = p.Results.weighted;
 
 % get keypoints for each image
-if(have_pts)
-  % if we already have points then 
-  % pos_directory is actually a points file, and similarly for neg_directory
-  points_files = { pos_directory, neg_directory};
-  points = read_points_from_file( points_files );
-else
-  points = findAllKeypoints( {pos_directory, neg_directory}, varargin{:});
-  write_points_to_file({pos_directory, neg_directory}, points, varargin{:});
-end
+points = getKeypoints({pos_directory, neg_directory}, varargin{:});
 
 [features, split_features] = generate_features( points, varargin{:});
 assert(floor(size(features, 1)/8) > 0)
@@ -84,3 +74,4 @@ classifier = train_classifier(cl_algo, trainMatrix, trainCat, ...
                               'trainfile', trainfile,...
                               'paramfile', paramfile,...
                               'regression', weighted);
+

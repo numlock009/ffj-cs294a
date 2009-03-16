@@ -17,7 +17,7 @@ project_path
 centroids_file = ['images/visualization/files/centroids_train', extra, ...
                   '_', desc];
 load(centroids_file);
-regression = 1
+weighted = 1
 
 % paramfile = ['svm_files/svm_param', svm_ext]
 testfile = 'svm_files/temp'
@@ -114,8 +114,8 @@ for sx = 1:num_steps_x
 
     % classify the results
     [meaningless_error, output_good] = test_svm(data_good, ones(size(data_good, 1), 1), ...
-                                                paramfile, testfile, ...
-                                                predictfile, regression);
+                                                paramfile, testfile, predictfile, weighted);
+
 
     % remap the output from the patches that where classifiable 
     % to all of the patches
