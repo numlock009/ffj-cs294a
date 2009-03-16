@@ -4,23 +4,28 @@
 % texture = 'skin_228x171'
 % image_folder = '/face_segments228x171' 
 % script_type = 'hr'
-% desc = 'rift'
-% threshold = 0.005
+desc = 'rift'
+threshold = 0.0005
 % extra = ['_', texture, '_', experiment_number, '_', script_type];
+extra = ['_new_hair_50x50_2_lr']
 % vars_file = ['images', image_folder, '/vars', extra]
 project_path
 % % classify 
 % % we should always call at least training before running this script
 % training
 % particularly centroids should be defined
-centroids_file = 'images/skin/centroids_file_skin_50x50_5_lr_rift.mat'
+centroids_file = ['images/visualization/files/centroids_train', extra, ...
+                  '_', desc];
 load(centroids_file);
+regression = 1
 
-paramfile = ['svm_files/svm_param', extra, '_', desc]
+% paramfile = ['svm_files/svm_param', svm_ext]
 testfile = 'svm_files/temp'
 predictfile = 'svm_files/temp1'
-img_file = 'images/visualization/9300HarrisCorners'
-final_image = ['images/visualization/segments/9300HarrisCorners', extra, ...
+paramfile = ['images/visualization/files/svm_param', extra, '_', desc]
+images_name = ['face_example', int2str(IM) ]
+img_file = ['images/visualization/', images_name]
+final_image = ['images/visualization/segments/', images_name, svm_ext, ...
                '_', desc]
 img_ext = '.jpg'
 
@@ -39,7 +44,7 @@ image_height = size(img, 1)
 width = 50
 height = 50
 % for sliding window the step that will be taken.
-step = 25
+step = 5
 
 % find keypoints in the image.
 points = find_keypoints(img, 'keypt', 'hl', 'threshold', threshold);
@@ -88,10 +93,10 @@ for i = 1:size(points, 1)
 end
 
 % visualize the sliding window data.
-% fig = figure('Visible', 'off');
-% hold on;
-% axis off;
-% imshow(img);
+fig = figure('Visible', 'off');
+hold on;
+axis off;
+imshow(img_color);
 
 for sx = 1:num_steps_x
   for sy = 1:num_steps_y
@@ -109,7 +114,8 @@ for sx = 1:num_steps_x
 
     % classify the results
     [meaningless_error, output_good] = test_svm(data_good, ones(size(data_good, 1), 1), ...
-                                                paramfile, testfile, predictfile);
+                                                paramfile, testfile, ...
+                                                predictfile, regression);
 
     % remap the output from the patches that where classifiable 
     % to all of the patches
@@ -132,16 +138,18 @@ for sx = 1:num_steps_x
           facecolor = 'g';
           c = (j - 1) * width + (sx-1)*step + 1;
           r = (i - 1) * height + (sy-1)*step + 1;
-          img_color(r:(r+height-1), c:(c+width-1), 2) = 128 + img_color(r:(r+height-1), c:(c+width-1), 2)/2;
-          % patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
-          %       facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
+          % img_color(r:(r+height-1), c:(c+width-1), 2) = 128 + img_color(r:(r+height-1), c:(c+width-1), 2)/2;
+          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
+                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
         end
       end
     end
   end
 end
 
-imwrite(imresize(img_color, 0.0625), [final_image, '_', int2str(width), 'x', int2str(height), '_sliding_segments.png']);
+% imwrite(imresize(img_color, [600, 800]), [final_image, '_', ...
+%                     int2str(width), 'x', int2str(height), svm_ext, '_sliding_segments.png']);
 
-% saveas(fig, [final_image, '_', int2str(width), 'x', int2str(height), '_sliding_segments.png']);
-% close(fig);
+saveas(fig, [final_image, '_', int2str(width), 'x', int2str(height), svm_ext, ...
+             '_sliding_segments.png']);
+close(fig);
