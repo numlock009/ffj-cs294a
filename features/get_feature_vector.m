@@ -26,3 +26,13 @@ for pt = 1:size(points, 2)
   data_pts = [data_pts; data_pt];
 end
 data = [data, data_pts];
+
+data_good = zeros(0, size(data, 2));
+good = 0;
+for j = 1:size(data,1)
+  if(norm(data(j, :)) ~= 0)
+    good = good + 1;
+    data_good(good, :) = data(j, :);
+  end
+end
+data = data_good;
