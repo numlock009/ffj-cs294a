@@ -22,5 +22,6 @@ else
   col_end = col + width - 1;
   if(row_end > size(img_color, 1)), row_end = size(img_color, 1), end
   if(col_end > size(img_color, 2)), col_end = size(img_color, 2), end
-  rgb_descriptor = im2double(img_color(row:row_end, col:col_end, :));
+  rgb_descriptor = img_color(row:row_end, col:col_end, :);
 end
+rgb_descriptor = im2double(rgb_descriptor);
