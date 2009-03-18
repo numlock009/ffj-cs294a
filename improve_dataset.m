@@ -83,8 +83,12 @@ for im = 1:size(files, 1)
         for k = 1:size(feature_types, 2)
           data_val = [];
           try
+            yend = y+height-1;
+            xend = x+width-1;
+            if(yend > image_height), yend = image_height, end;
+            if(xend > image_width), xend = image_width, end;
             data_val = whole_features(feature_types{k}, ...
-                                      img_color(y:y+height-1, x:x+width-1, :));
+                                      img_color(y:yend, x:xend, :));
           catch ME
             rethrow(ME);
             % only whole feature we know about are 3 channel color
