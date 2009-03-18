@@ -92,7 +92,8 @@ for sx = 1:num_steps_x
           try
             data_val = whole_features(feature_types{k}, ...
                                       img_color(y:y+height-1, x:x+width-1, :));
-          catch
+          catch ME
+            rethrow(ME);
             % only whole feature we know about are 3 channel color
             % features
             data_val = zeros(1, whole_features_size(feature_types{k}, ...

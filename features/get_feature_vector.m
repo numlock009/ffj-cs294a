@@ -25,8 +25,8 @@ for pt = 1:size(points, 2)
   end
   data_pts = [data_pts; data_pt];
 end
-data = [data, data_pts];
 
+data = [data, data_pts];
 data_good = zeros(0, size(data, 2));
 good = 0;
 for j = 1:size(data,1)

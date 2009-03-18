@@ -24,6 +24,7 @@ for fs = 1:size(points, 2)
         descriptor = get_descriptors(fname, varargin{:}, ...
                                             'pt', keypoints(j,:));
       catch
+        disp(['got an error with image: ', fname]);
         j = j + 1;
         continue;
       end
