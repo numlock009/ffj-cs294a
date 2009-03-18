@@ -40,7 +40,6 @@ weighted = p.Results.weighted;
 
 % get keypoints for each image
 points = getKeypoints({pos_directory, neg_directory}, varargin{:});
-
 [features, split_features] = generate_features(points, varargin{:});
 assert(floor(size(features, 1)/8) > 0)
 

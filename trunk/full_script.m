@@ -42,12 +42,12 @@ classifier
 
 vars_file = ['results', '/vars', '_train', svm_ext]
 % if we want to save the variables to be used later we call this
-save(vars_file,...
+save([vars_file, '.mat'],...
      'centroids', 'extra', 'desc', 'cl_algo', 'trainMatrix', 'trainCat',...
      'pos_train', 'neg_train', 'ext', 'image_folder',...
      'width', 'height', 'script_type', 'texture', 'experiment_number', 'pts_ext', ...
      'threshold', 'max_points', 'img_dir', 'final_directory', 'weighted', 'svm_tf', 'svm_pm');
-save([vars_file, '_centroids'], 'centroids');
+save([vars_file, '_centroids.mat'], 'centroids');
 
 % get the training error
 [train_ce, train_output] = classifier(trainMatrix, trainCat, [svm_tf, '_TE'], [svm_pm, '_TE']);
@@ -55,7 +55,7 @@ save([vars_file, '_centroids'], 'centroids');
 te_pr = precision(sign(train_output), sign(trainCat), 1, -1);
 te_re = recall(sign(train_output), sign(trainCat), 1, -1);
 
-save([vars_file, '_train_res'], 'train_ce', 'te_pr', 'te_re');
+save([vars_file, '_train_res.mat'], 'train_ce', 'te_pr', 'te_re');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % run script for classifying the testing set.
@@ -95,7 +95,7 @@ cl_algo
 size(centroids)
 
 % if we want to save the variables to be used later we call this
-save([vars_file, '_res'], 'e', 'pr', 're');
-save([vars_file, '_all']);
+save([vars_file, '_res.mat'], 'e', 'pr', 're');
+save([vars_file, '_all.mat']);
 
 improve_dataset

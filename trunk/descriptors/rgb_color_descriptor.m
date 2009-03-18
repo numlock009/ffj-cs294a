@@ -20,5 +20,7 @@ else
   col = floor(keypt(2)/width)*width + 1;
   row_end = row + height - 1;
   col_end = col + width - 1;
-  rgb_descriptor = img_color( row:row_end, col:col_end, :);
+  if(row_end > size(img_color, 1)), row_end = size(img_color, 1), end
+  if(col_end > size(img_color, 2)), col_end = size(img_color, 2), end
+  rgb_descriptor = im2double(img_color(row:row_end, col:col_end, :));
 end

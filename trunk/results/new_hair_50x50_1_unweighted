@@ -68,3 +68,412 @@ have_pts_train = 0
 have_pts_test = 0
 cl_algo = svm
 paramfile = svm_files/svm_param_new_hair_50x50_1_lr_rift
+Warning: No display specified.  You will not be able to display graphics on the screen.
+Warning: No window system found.  Java option 'MWT' ignored
+
+                            < M A T L A B (R) >
+                  Copyright 1984-2008 The MathWorks, Inc.
+                         Version 7.6.0.324 (R2008a)
+                             February 10, 2008
+
+ 
+  To get started, type one of these: helpwin, helpdesk, or demo.
+  For product information, visit www.mathworks.com.
+ 
+>> 
+expnum =
+
+1
+
+>> 
+text =
+
+new_hair_50x50
+
+>> 
+img_fol =
+
+/test
+
+>> 
+neg_fol =
+
+/test
+
+>> 
+weighted =
+
+     0
+
+>> 
+st =
+
+lr
+
+>> 
+width =
+
+    50
+
+>> 
+height =
+
+    50
+
+>> 
+keypt =
+
+hl
+
+>> 
+max_pts =
+
+        1000
+
+>> 
+threshold =
+
+   5.0000e-04
+
+>> 
+desc =
+
+rift
+
+>> 
+feature_type =
+
+keypt
+
+>> 
+cl_algo =
+
+svm
+
+>> 
+vis_dir =
+
+images/face
+
+>> 
+final_directory =
+
+images/face/fp
+
+>> >> 
+pts_ext =
+
+_hl_1000_0.0005
+
+
+svm_ext =
+
+_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+train_pts_ext =
+
+_points_train_hl_1000_0.0005
+
+
+pos_train =
+
+images/test/pos
+
+
+neg_train =
+
+images/test/neg
+
+
+ext =
+
+train_hl_1000_0.0005
+
+
+svm_tf =
+
+svm_files/svm_train_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+svm_pm =
+
+svm_files/svm_param_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+hlt0 =
+
+   1.0e+03 *
+
+    2.0090    0.0030    0.0160    0.0170    0.0160    0.0155
+
+
+hlt1 =
+
+   3.6016e+04
+
+
+points_dir =
+
+images/test/pos
+
+
+last_dir = 
+
+    'pos'
+
+
+fid =
+
+     3
+
+
+hlt0 =
+
+   1.0e+03 *
+
+    2.0090    0.0030    0.0160    0.0170    0.0160    0.0517
+
+
+hlt1 =
+
+   3.5701e+04
+
+
+points_dir =
+
+images/test/neg
+
+
+last_dir = 
+
+    'neg'
+
+
+fid =
+
+     3
+
+
+k =
+
+   190
+
+
+trainfile =
+
+svm_files/svm_train_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+paramfile =
+
+svm_files/svm_param_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+regression =
+
+     0
+
+Writing  done.
+
+Calling SVMlight:
+./classifiers/svm/svm_learn -z c svm_files/svm_train_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005 svm_files/svm_param_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+Scanning examples...done
+Reading examples into memory...OK. (2 examples read)
+Setting default regularization parameter C=0.0002
+Optimizing.done. (2 iterations)
+Optimization finished (0 misclassified, maxdiff=0.00000).
+Runtime in cpu-seconds: 0.00
+Number of SV: 2 (including 2 at upper bound)
+L1 loss: loss=0.47826
+Norm of weight vector: |w|=0.01584
+Norm of longest example vector: |x|=98.43780
+Estimated VCdim of classifier: VCdim<=3.43112
+Computing XiAlpha-estimates...done
+Runtime for XiAlpha-estimates in cpu-seconds: 0.00
+XiAlpha-estimate of the error: error<=100.00% (rho=1.00,depth=0)
+XiAlpha-estimate of the recall: recall=>0.00% (rho=1.00,depth=0)
+XiAlpha-estimate of the precision: precision=>0.00% (rho=1.00,depth=0)
+Number of kernel evaluations: 29
+Writing model file...done
+
+classifier = 
+
+    @(tdata,tcat,testfile,predictfile)(test_svm(tdata,tcat,paramfile,testfile,predictfile,regression))
+
+
+vars_file =
+
+results/vars_train_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+Writing  done.
+
+Calling SVMlight:
+./classifiers/svm/svm_classify svm_files/svm_train_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005_TE svm_files/svm_param_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005 svm_files/svm_param_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005_TE
+
+Reading model...OK. (2 support vectors read)
+Classifying test examples..done
+Runtime (without IO) in cpu-seconds: 0.00
+Accuracy on test set: 100.00% (2 correct, 0 incorrect, 2 total)
+Precision/recall on test set: 100.00%/100.00%
+
+test_pts_ext =
+
+_points_test_hl_1000_0.0005
+
+
+pos_test =
+
+images/test/pos_test
+
+
+neg_test =
+
+images/test/neg_test
+
+
+test_ext =
+
+test_hl_1000_0.0005
+
+
+svm_pd =
+
+svm_files/svm_predict_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+svm_testf =
+
+svm_files/svm_test_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+hlt0 =
+
+   1.0e+03 *
+
+    2.0090    0.0030    0.0160    0.0170    0.0180    0.0009
+
+
+hlt1 =
+
+  322.6470
+
+
+points_dir =
+
+images/test/pos_test
+
+
+last_dir = 
+
+    'pos_test'
+
+
+fid =
+
+     3
+
+
+hlt0 =
+
+   1.0e+03 *
+
+    2.0090    0.0030    0.0160    0.0170    0.0180    0.0012
+
+
+hlt1 =
+
+  334.8900
+
+
+points_dir =
+
+images/test/neg_test
+
+
+last_dir = 
+
+    'neg_test'
+
+
+fid =
+
+     3
+
+
+ans =
+
+     1   190
+
+
+ans =
+
+     1   190
+
+Writing  done.
+
+Calling SVMlight:
+./classifiers/svm/svm_classify svm_files/svm_test_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005 svm_files/svm_param_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005 svm_files/svm_predict_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+Reading model...OK. (2 support vectors read)
+Classifying test examples..done
+Runtime (without IO) in cpu-seconds: 0.00
+Accuracy on test set: 50.00% (1 correct, 1 incorrect, 2 total)
+Precision/recall on test set: 50.00%/100.00%
+
+e =
+
+    0.5000
+
+
+extra =
+
+_new_hair_50x50_1_lr
+
+
+max_points =
+
+        1000
+
+
+threshold =
+
+   5.0000e-04
+
+
+desc =
+
+rift
+
+
+keypt =
+
+hl
+
+
+cl_algo =
+
+svm
+
+
+ans =
+
+   190    32
+
+
+paramfile =
+
+svm_files/svm_param_new_hair_50x50_1_lr_rift_keypt_0_hl_1000_0.0005
+
+
+testfile =
+
+svm_files/temp
+
+
+predictfile =
+
+svm_files/temp1
+
+>> 
