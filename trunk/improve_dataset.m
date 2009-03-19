@@ -83,10 +83,8 @@ for im = 1:size(files, 1)
         for k = 1:size(feature_types, 2)
           data_val = [];
           try
-            yend = y+height-1;
-            xend = x+width-1;
-            if(yend > image_height), yend = image_height, end;
-            if(xend > image_width), xend = image_width, end;
+            yend = min(y+height-1, image_height);
+            xend = min(x+width-1, image_width);
             data_val = whole_features(feature_types{k}, ...
                                       img_color(y:yend, x:xend, :));
           catch ME
@@ -183,14 +181,8 @@ for im = 1:size(files, 1)
           facecolor = 'g';
           c = (j - 1) * width + 1;
           r = (i - 1) * height + 1;
-	  y = r + height - 1;
-          if( y > image_height)
-	    y = image_height;
-          end
-	  x = c + width - 1;
-          if(x > image_width)
-	    x = image_width;
-          end
+	  y = min(r + height - 1, image_height);
+	  x = min(c + width - 1, image_width);
           img_color(r:y, c:x, 2) = 128 + img_color(r:y, c:x, 2)/2;
 %          patch([c, c + width, c + width, c], [r, r, r+height, r+height],...
 %                facecolor, 'FaceAlpha', 0.2, 'EdgeColor', facecolor);
